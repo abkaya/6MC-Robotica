@@ -1,7 +1,11 @@
 #include "robotapp.h"
+#include "qrcode.h"
 
 void RobotApp(int argc, char *argv[])
 {
+    int MaxDataLen=20;
+    char* Data[MaxDataLen]
+
     LegoMotorSetup(&LegoMotor,1,0,0);
     LegoMotorSetup(&LegoMotor,2,0,0);
 
