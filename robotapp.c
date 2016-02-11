@@ -13,8 +13,6 @@
 
 void RobotApp(int argc, char *argv[])
 {
-    int MaxDataLen=20;
-    char* Data[MaxDataLen]
 
     LegoMotorSetup(&LegoMotor,1,0,0);
     LegoMotorSetup(&LegoMotor,2,0,0);
@@ -50,34 +48,34 @@ void RobotApp(int argc, char *argv[])
     // Read QR code
     //==============================
     char qr_data[maxContentLength] = "";
-    int res = QRCodeDecode(char *qr_data,int maxContentLength);   // Scan for QR code
+    int res = QRCodeDecode(char *qr_data, int maxContentLength);   // Scan for QR code
     switch(res) {
       case 0 :   // OK
         // code
         #ifdef DEBUG_ABORT
           printf ("QR code = %s\n",qr_data);  // log to console
         #endif
-        break:
+        break;
       case 1 :   // camera error
         // code
         #ifdef DEBUG_ABORT
           printf ("Camera Error\n");  // log to console
         #endif
-        break:
+        break;
       case 2 :   // no QR code detected
         // code
         #ifdef DEBUG_ABORT
           printf ("No QR code\n");  // log to console
         #endif
-        break:
+        break;
       case 3 :   // other error
         // code
         #ifdef DEBUG_ABORT
           printf ("Erro while scanning QR code\n");  // log to console
         #endif
-        break:
+        break;
       default :
-      statement(s);
+      //code
     }
 
 
