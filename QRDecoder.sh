@@ -4,7 +4,7 @@ echo "$timeCheck" > QR.dat				#timeCheck written in an empty/emptied QR.dat on l
 echo "[$(date | cut -c 12-19)] Time check: $timeCheck, written on line 1 of QR.dat"
 
 echo [$(date | cut -c 12-19)] Raspistill saving QR.jpg to tmpfs: /io/
-raspistill -vf -hf -o /io/QR.jpg			#vertical and horizontal flip: (-vf, -hf) in output (-o) file (QR.jpg)	
+raspistill -vf -hf -o /io/QR.jpg			#vertical and horizontal flip: (-vf, -hf) in output (-o) file (QR.jpg), saved on RAM, accessible at /io	
 echo [$(date | cut -c 12-19)] Raspistill saved QR.jpg to tmpfs: /io/
 
 zbarimg -q /io/QR.jpg >> /io/QR.dat			#print QR-code data (-q parameter suppresses other output) 
