@@ -12,7 +12,7 @@
 
 #define DEBUG_ABORT
 
-int QRCodeDecode(char* Data,int MaxDataLen) {
+int QRCodeDecode(char *Data,int MaxDataLen) {
 
   //==============================
   // Get system time
