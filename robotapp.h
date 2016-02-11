@@ -1,3 +1,11 @@
+//========================================
+//
+//  Robotics Lab Project
+//  Written by Abdil Kaya & Robin Janssens
+//  Commissioned by University of Antwerp
+//
+//========================================
+
 #ifndef ROBOT_APP
 #define ROBOT_APP
 

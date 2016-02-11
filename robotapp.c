@@ -1,3 +1,11 @@
+//========================================
+//
+//  Robotics Lab Project
+//  Written by Abdil Kaya & Robin Janssens
+//  Commissioned by University of Antwerp
+//
+//========================================
+
 #include "robotapp.h"
 #include "qrcode.h"
 
@@ -38,5 +46,3 @@ void RobotApp(int argc, char *argv[])
 
     printf ("Ready.\n");
 }
-
-QRCodeDecode(
