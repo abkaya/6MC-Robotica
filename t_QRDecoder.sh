@@ -1,15 +1,22 @@
 #!/bin/bash
-#Test script in ubuntu; mind the output locations and expression after the shebang (line 1)
-timeCheck=$(date | cut -c 12-19 | sed 's/://g');
-echo "$timeCheck" > QR.dat
-echo "[$(date | cut -c 12-19)] Time check: $timeCheck, written on line 1 of QR.dat"
+#lubuntu test version
+GREEN='\033[0;32m'
+NC='\033[0m'
+ORANGE='\033[0;33m'
+CYAN='\033[0;36m'
+BG='\033[44;1;37m'
 
-echo "[$(date | cut -c 12-19)] Raspistill saving QR.jpg to tmpfs: /io/"
-#removed line. QR.jpg exists for this test
-echo "[$(date | cut -c 12-19)] Raspistill saved QR.jpg to tmpfs: /io/"
+timeCheck=$(date | cut -c 12-19 | sed 's/://g');        #saves current time in a variable with format: hhmmss, to be compared by the compiled c program
+echo "0" > QR.dat                                   	#the compiled c program will know the QR code info is not yet available when line 1 equals to 0
 
-#zbarimg -v parameter: verbose,sed -n parameter: line number of verbose output, -i: append to next line
-zbarimg -q QR.jpg >> QR.dat
-echo "[$(date | cut -c 12-19)] zbarimg QR poly length and code written on line 2 and 3 respectively of QR.dat"
-cat QR.dat
+echo -e "${BG}[$(date | cut -c 12-19)]${NC} Raspistill saving ${ORANGE}QR.jpg${NC} to ${CYAN}tmpfs: /io/ (RAM)${NC} : [${GREEN}OK${NC}]"
+echo -e "${BG}[$(date | cut -c 12-19)]${NC} Raspistill saved ${ORANGE}QR.jpg${NC} to ${CYAN}tmpfs: /io/ (RAM)${NC} : [${GREEN}OK${NC}]"
 
+zbarimg -q QR.jpg >> QR.dat				#print QR-code data (-q parameter suppresses other output) 
+echo -e "${BG}[$(date | cut -c 12-19)]${NC} zbarimg QR poly length and code written on line 2 and 3 respectively of ${ORANGE}/io/QR.dat${NC} : [${GREEN}OK${NC}]"
+sed -i '1s/.*/'$timeCheck'/' QR.dat			#QR-code data is available so we can now replace line 1 with the actual timeCheck value
+echo -e "${BG}[$(date | cut -c 12-19)]${NC} QR-code data read. Time check: ${ORANGE}$timeCheck${NC}, written on line 1 of ${ORANGE}/io/QR.dat${NC} : [${GREEN}OK${NC}]"
+
+echo -e "${CYAN}--------------------------------${NC}"
+cat QR.dat                                          #print QR.dat to std output.i
+echo -e "${CYAN}--------------------------------${NC}"

@@ -23,6 +23,6 @@ void main() {
     printf("time: %i\n",time_int);   // print integer value to debug console
   #endif
 
-  system("./test.sh");   // run a script
-  //system("./QRDecoder.sh");
+  system("./t_QRDecoder.sh"); //run a script
+  //system("./QRDecoder.sh"); //run a script
 }
