@@ -1,3 +1,11 @@
+//========================================
+//
+//  test.C | C library to get data from QR code on Raspberry Pi
+//  Written by Abdil Kaya & Robin Janssens
+//  Commissioned by University of Antwerp
+//
+//========================================
+
 #include <time.h>
 #include <string.h>
 #include <stdio.h>
@@ -39,13 +47,9 @@ void main() {
     //==============================
     time_dif = time_file_int - time_int;   // calculate the difference
     #ifdef DEBUG_ABORT
-      printf("time difference %i\n", time_dif);   // print integer value to debug console
+      printf("time difference: %i\n", time_dif);   // print integer value to debug console
     #endif
   } while (time_dif < 0);
-
-  #ifdef DEBUG_ABORT
-    printf("BANG");   // SUCCESS
-  #endif
 
 }
 
