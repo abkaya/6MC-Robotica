@@ -34,17 +34,16 @@ void main() {
     // Get time from .dat file
     //==============================
     FILE *fp;
-    fp = fopen("./QR.dat", "r");
-    char time_file[10];
-    fgets(time_file, 10, (FILE*)fp);   // get the scan time from the first line
-    fgets(content, 20, (FILE*)fp);     // get poly length
-    fgets(content, 20, (FILE*)fp);     // get the content of the QR code
-    int time_file_int = atoi(time_file);
+    fp = fopen("./QR.dat", "r");  // read from QR.dat
+    char time_file[20];
+    fgets(time_file, 20, (FILE*)fp);      // get the scan time from the first line
+    fgets(content, 30, (FILE*)fp);        // get the content of the QR code
+    int time_file_int = atoi(time_file);  // cast string to integer
     #ifdef DEBUG_ABORT
       printf("time in file: %i\n", time_file_int);   // print integer value to debug console
       printf("content: %s\n",content);
     #endif
-    fclose(fp);
+    fclose(fp);  // close QR.dat
 
     //==============================
     // Check if data is valid
