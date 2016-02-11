@@ -12,7 +12,7 @@
 
 #define DEBUG_ABORT
 
-void main() {
+int QRCodeDecode(char *Data,int MaxDataLen) {
 
   //==============================
   // Get system time
@@ -28,7 +28,6 @@ void main() {
   system("./t_QRDecoder.sh");   // run a script
 
   int time_dif = -1;       // init on a negative number
-  char content[30] = "";   // this string holds the content of the QR code
   do {
     //==============================
     // Get time from .dat file
@@ -37,11 +36,11 @@ void main() {
     fp = fopen("./QR.dat", "r");  // read from QR.dat
     char time_file[20];
     fgets(time_file, 20, (FILE*)fp);      // get the scan time from the first line
-    fgets(content, 30, (FILE*)fp);        // get the content of the QR code
+    fgets(Data, MaxDataLen, (FILE*)fp);        // get the content of the QR code
     int time_file_int = atoi(time_file);  // cast string to integer
     #ifdef DEBUG_ABORT
       printf("time in file: %i\n", time_file_int);   // print integer value to debug console
-      printf("content: %s\n",content);
+      printf("content: %s\n",Data);
     #endif
     fclose(fp);  // close QR.dat
 
@@ -53,6 +52,8 @@ void main() {
       printf("time difference: %i\n", time_dif);   // print integer value to debug console
     #endif
   } while (time_dif < 0);
+
+  return 0;
 
 }
 
