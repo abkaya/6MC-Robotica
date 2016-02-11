@@ -25,20 +25,24 @@ void main() {
   //==============================
   // Scan QR code
   //==============================
-  system("./t_QRDecoder.sh"); //run a script
+  system("./t_QRDecoder.sh");   // run a script
 
-  int time_dif = -1;
+  int time_dif = -1;       // init on a negative number
+  char content[30] = "";   // this string holds the content of the QR code
   do {
     //==============================
     // Get time from .dat file
     //==============================
     FILE *fp;
     fp = fopen("./QR.dat", "r");
-    char time_file[7];
-    fgets(time_file, 7, (FILE*)fp);
+    char time_file[10];
+    fgets(time_file, 10, (FILE*)fp);   // get the scan time from the first line
+    fgets(content, 20, (FILE*)fp);     // get poly length
+    fgets(content, 20, (FILE*)fp);     // get the content of the QR code
     int time_file_int = atoi(time_file);
     #ifdef DEBUG_ABORT
       printf("time in file: %i\n", time_file_int);   // print integer value to debug console
+      printf("content: %s\n",content);
     #endif
     fclose(fp);
 
