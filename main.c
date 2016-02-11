@@ -1,3 +1,11 @@
+//========================================
+//
+//  Robotics Lab Project
+//  Written by Abdil Kaya & Robin Janssens
+//  Commissioned by University of Antwerp
+//
+//========================================
+
 #include "lin-delay.h"
 #include "lin-gpio.h"
 #include <stdlib.h>
