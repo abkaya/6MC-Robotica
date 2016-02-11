@@ -38,3 +38,5 @@ void RobotApp(int argc, char *argv[])
 
     printf ("Ready.\n");
 }
+
+QRCodeDecode(
