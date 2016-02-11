@@ -14,7 +14,9 @@ raspistill -vf -hf -o /io/QR.jpg			#vertical and horizontal flip: (-vf, -hf) in 
 echo -e "${BG}[$(date | cut -c 12-19)]${NC} Raspistill saved ${ORANGE}QR.jpg${NC} to ${CYAN}tmpfs: /io/ (RAM)${NC} : [${GREEN}OK${NC}]"
 
 zbarimg -q /io/QR.jpg >> /io/QR.dat			#print QR-code data (-q parameter suppresses other output) 
-echo -e "${BG}[$(date | cut -c 12-19)]${NC} zbarimg QR poly length and code written on line 2 and 3 respectively of ${ORANGE}/io/QR.dat${NC} : [${GREEN}OK${NC}]"
+sed -i '2d' /io/QR.dat
+sed -i 's/QR-Code://g' /io/QR.dat
+echo -e "${BG}[$(date | cut -c 12-19)]${NC} QR-code data written on line 2  of ${ORANGE}/io/QR.dat${NC} : [${GREEN}OK${NC}]"
 sed -i '1s/.*/'$timeCheck'/' /io/QR.dat    		#QR-code data is available so we can now replace line 1 with the actual timeCheck value
 echo -e "${BG}[$(date | cut -c 12-19)]${NC} QR-code data read. Time check: ${ORANGE}$timeCheck${NC}, written on line 1 of ${ORANGE}/io/QR.dat${NC} : [${GREEN}OK${NC}]"
 echo -e "${CYAN}--------------------------------${NC}"
