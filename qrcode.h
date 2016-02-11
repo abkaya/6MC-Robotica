@@ -13,7 +13,7 @@
  * 2:No QR code detected \n
  * 3:Other error \n
 */
-int QRCodeDecode(char *Data,int MaxDataLen);
+int QRCodeDecode(char* Data,int MaxDataLen);
 
 
 #endif

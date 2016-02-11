@@ -47,7 +47,7 @@ void RobotApp(int argc, char *argv[])
     //==============================
     // Read QR code
     //==============================
-    char qr_data[maxContentLength] = "";
+    char* qr_data[maxContentLength];
     int res = QRCodeDecode(*qr_data, maxContentLength);   // Scan for QR code
     switch(res) {
       case 0 :   // OK
@@ -75,8 +75,8 @@ void RobotApp(int argc, char *argv[])
         #endif
         break;
       default :
+        break;
       //code
-      break;
     }
 
 
