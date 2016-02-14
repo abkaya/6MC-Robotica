@@ -11,16 +11,39 @@
 
 #define maxContentLength 30   // max amount of chars in content
 
+#define DEBUG_ABORT
+#define testQR
+
 void RobotApp(int argc, char *argv[])
 {
-
-    LegoMotorSetup(&LegoMotor,1,0,0);
+    //==============================
+    // Initialization
+    //==============================
+    char* qr_data[maxContentLength];    // create QR data holder
+    int res;                            // hold return status values
+    LegoMotorSetup(&LegoMotor,1,0,0);   // motor, channel, brake, mode
     LegoMotorSetup(&LegoMotor,2,0,0);
+    #ifdef DEBUG_ABORT
+        printf ("Initialisation complete\n");
+    #endif
+
+    //==============================
+    // Test Procedures
+    //==============================
+    #ifdef testQR     // Try to scan a QR-code every 5 seconds
+        while (1) {
+            system ("espeak -ven+f2 -k5 -a50 -s150 \"Testing QR code scanning\" --stdout | aplay");
+            res = QRCodeDecode(*qr_data, maxContentLength);   // Scan for QR code
+            printf("QR status: %i",res);                      // print status
+            _delay_ms(5000);
+        }
+    #endif
 
 
-    printf ("Initialisation complete\n");
 
-
+    //==============================
+    // Drive
+    //==============================
     LegoMotorDirectControl(&LegoMotor,1,25000);
     LegoMotorDirectControl(&LegoMotor,2,25000);
 
@@ -47,8 +70,8 @@ void RobotApp(int argc, char *argv[])
     //==============================
     // Read QR code
     //==============================
-    char* qr_data[maxContentLength];
-    int res = QRCodeDecode(*qr_data, maxContentLength);   // Scan for QR code
+    //char* qr_data[maxContentLength];
+    res = QRCodeDecode(*qr_data, maxContentLength);   // Scan for QR code
     switch(res) {
       case 0 :   // OK
         // code
