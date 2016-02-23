@@ -68,6 +68,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="project.h" />
+		<Unit filename="qrcode.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="qrcode.h" />
 		<Unit filename="robotapp.c">
 			<Option compilerVar="CC" />
 		</Unit>
