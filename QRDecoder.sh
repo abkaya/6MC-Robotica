@@ -23,16 +23,18 @@ function ErrorCheck {
 
         if echo "$grepOut" | grep -q mmal;then
                 error=true
-                echo "1" >> /io/QR.dat
+		sed -i '3i\1' /io/QR.dat                
                 $debug&& echo -e "${BG}[$(date | cut -c 12-19)]${NC} ERROR CODE 1: Camera Error : [${RED}NOK${NC}]"
         elif ! echo "$grep2Out" | grep -q lading;then
                 error=true
-                echo "2" >> /io/QR.dat
+		sed -i '3i\2' /io/QR.dat                
                 $debug&& echo -e "${BG}[$(date | cut -c 12-19)]${NC} ERROR CODE 2: No QR data Error : [${RED}NOK${NC}]"
         elif [[ "${#grep0Out}" -lt "2" ]];then
                 error=true
-                echo "3" >> /io/QR.dat
+		sed -i '3i\3' /io/QR.dat                
                 $debug&& echo -e "${BG}[$(date | cut -c 12-19)]${NC} ERROR CODE 3: Other Error : [${RED}NOK${NC}]"
+        else
+		sed -i '3i\0' /io/QR.dat
         fi
         printOk
 }
