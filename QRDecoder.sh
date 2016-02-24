@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #lubuntu test version
 GREEN='\033[0;32m'
 NC='\033[0m'
@@ -12,18 +12,14 @@ RED='\033[0;31m'
 debug=true
 error=false
 errorTest=false
+rm -rf /io/*
 
 function ErrorCheck {
-	#add 3 empty lines in order to make sure sed commands work.
-        for i in {1..3}
-        do
-                echo $'\n' >> /io/QR.dat
-        done
 
 
-        grepOut="$(tail QR.dat)";
-        grep0Out=$(sed -n 1p QR.dat);
-        grep2Out=$(sed -n 2p QR.dat);
+        grepOut="$(tail /io/QR.dat)";
+        grep0Out=$(sed -n 1p /io/QR.dat);
+        grep2Out=$(sed -n 2p /io/QR.dat);
 
         #test grepOut for Camera Error
         $errorTest&& grepOut="mmal"
@@ -61,17 +57,33 @@ timeCheck=$(date | cut -c 12-19 | sed 's/://g');
 #the compiled c program will know the QR code info is not yet available when line 1 equals to 0
 echo "0" > /io/QR.dat
 
+
+
 $debug&& echo -e "${BG}[$(date | cut -c 12-19)]${NC} Raspistill saving ${ORANGE}QR.jpg${NC} to ${CYAN}tmpfs: /io/ (RAM)${NC}"
 #Raspistill: vertical and horizontal flip: (-vf, -hf) in output (-o) file (QR.jpg), saved on RAM, accessible at /io 
 #-w -h : width and height; lowest 640x480; should hopefully be faster at lower quality shots. -q 10: quality (0-100). 100: uncompressed. 10 should deliver lower quality.
-raspistill -vf -hf -o /io/QR.jpg -w 640 -h 480 -q 10	
+raspistill -o /io/QR.jpg &
+wait
 
 #print QR-code data (-q parameter suppresses other output) 
-zbarimg -q /io/QR.jpg >> /io/QR.dat 
-sed -i '2d' /io/QR.dat
+zbarimg -q /io/QR.jpg > /io/QRTemp
+QRData=$(cat /io/QRTemp)
+echo $QRData >> /io/QR.dat
+
+for i in {1..3}
+        do
+                echo $'\n' >> /io/QR.dat
+      done
+
+
+#sed -i "2i\$QRData" /io/QR.dat
+#sed -i '2d' /io/QR.dat
 sed -i 's/QR-Code://g' /io/QR.dat
 #QR-code data is available so we can now replace line 1 with the actual timeCheck value
 sed -i '1s/.*/'$timeCheck'/' /io/QR.dat
+
+ErrorCheck
+
 $debug&& echo -e "${CYAN}--------------------------------${NC}"
 #print QR.dat to std output.
 $debug&& head -n 3 /io/QR.dat
