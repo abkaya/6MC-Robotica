@@ -54,6 +54,7 @@ int QRCodeDecode(char* Data,int MaxDataLen) {
         time_dif = time_file_int - time_int;   // calculate the difference
         #ifdef DEBUG_ABORT
             printf("time difference: %i\n", time_dif);   // print integer value to debug console
+            _delay_ms(2000);
         #endif
     } while (time_dif < 0);
 
