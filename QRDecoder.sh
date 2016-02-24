@@ -14,6 +14,13 @@ error=false
 errorTest=false
 
 function ErrorCheck {
+	#add 3 empty lines in order to make sure sed commands work.
+        for i in {1..3}
+        do
+                echo $'\n' >> /io/QR.dat
+        done
+
+
         grepOut="$(tail QR.dat)";
         grep0Out=$(sed -n 1p QR.dat);
         grep2Out=$(sed -n 2p QR.dat);
@@ -67,6 +74,6 @@ sed -i 's/QR-Code://g' /io/QR.dat
 sed -i '1s/.*/'$timeCheck'/' /io/QR.dat
 $debug&& echo -e "${CYAN}--------------------------------${NC}"
 #print QR.dat to std output.
-$debug&& cat /io/QR.dat
+$debug&& head -n 3 /io/QR.dat
 $debug&& echo -e "${CYAN}--------------------------------${NC}"
 
