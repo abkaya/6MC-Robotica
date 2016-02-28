@@ -13,6 +13,7 @@
 
 #define DEBUG_ABORT
 #define testQR
+//#define testTag
 
 void RobotApp(int argc, char *argv[])
 {
@@ -25,6 +26,7 @@ void RobotApp(int argc, char *argv[])
     LegoMotorSetup(&LegoMotor,2,0,0);
     #ifdef DEBUG_ABORT
         printf ("Initialisation complete\n");
+        system ("espeak -ven+f2 -k5 -a50 -s150 \"Initialasition complete\" --stdout | aplay");
     #endif
 
     //==============================
@@ -38,7 +40,14 @@ void RobotApp(int argc, char *argv[])
             _delay_ms(5000);
         }
     #endif
-
+    #ifdef testTag     // Try to scan a QR-code every 5 seconds
+        while (1) {
+            system ("espeak -ven+f2 -k5 -a50 -s150 \"Testing Tag scanning\" --stdout | aplay");
+            res = TagReaderGetUID(*tag_data);   // Scan for QR code
+            printf("tag status: %i",res);                      // print status
+            _delay_ms(5000);
+        }
+    #endif
 
 
     //==============================
