@@ -1,4 +1,12 @@
 #!/bin/bash
+
+#=======================================================
+#
+#  QRDecoder.sh |  
+#  Written by Abdil Kaya & Robin Janssens
+#
+#=======================================================
+
 sudo mkdir /mnt/ramdisk/
 sudo mount -t tmpfs -o size=100m tmpfs /mnt/ramdisk/
 sudo chown pi /mnt/ramdisk/

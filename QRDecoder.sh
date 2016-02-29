@@ -1,4 +1,10 @@
 #!/bin/bash
+#=======================================================
+#
+#  QRDecoder.sh |  
+#  Written by Abdil Kaya & Robin Janssens
+#
+#=======================================================
 #lubuntu test version
 GREEN='\033[0;32m'
 NC='\033[0m'
