@@ -1,7 +1,7 @@
 #!/bin/bash
 sudo mkdir /mnt/ramdisk/
 sudo mount -t tmpfs -o size=100m tmpfs /mnt/ramdisk/
-
+sudo chown pi /mnt/ramdisk/
 
 ##TO DO:
 #add the following line to /etc/fstab in order for the ramdisk to exist upon reboot:
