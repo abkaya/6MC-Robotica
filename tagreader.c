@@ -25,7 +25,7 @@ int TagReaderGetUID(char *Data) {
     }
 
     while ( fgets(line, 32, fp) != NULL)  {
-        printf("%s", line);
+        printf("line: %s\n", line);
     }
 
 
