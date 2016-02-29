@@ -27,7 +27,7 @@ int QRCodeDecode(char* Data,int MaxDataLen) {
     //==============================
     // Scan QR code
     //==============================
-    system("./t_QRDecoder.sh");   // run a script
+    system("./QRDecoder.sh");   // run a script
 
     int time_dif = -1;       // init on a negative number
     do {
