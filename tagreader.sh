@@ -2,9 +2,9 @@
 
 #=======================================================
 #
-#  tagreader.sh |  
+#  tagreader.sh
 #  Written by Abdil Kaya & Robin Janssens
 #
 #=======================================================
 
-echo scriptor APDU | grep "<" | tr -d ' ' | sed 's\<\\g' | sed 's\:Normalprocessing\\g'
+scriptor APDU 2>/dev/null | grep '<' | tr -d ' ' | sed 's\<\\g' | sed 's\:Normalprocessing.\\g'

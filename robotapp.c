@@ -12,8 +12,8 @@
 #define maxContentLength 30   // max amount of chars in content
 
 #define DEBUG_ABORT
-#define testQR
-//#define testTag
+//#define testQR
+#define testTag
 
 void RobotApp(int argc, char *argv[])
 {
@@ -21,6 +21,7 @@ void RobotApp(int argc, char *argv[])
     // Initialization
     //==============================
     char* qr_data[maxContentLength];    // create QR data holder
+    char* tag_data;                     // create tag data holder
     int res;                            // hold return status values
     LegoMotorSetup(&LegoMotor,1,0,0);   // motor, channel, brake, mode
     LegoMotorSetup(&LegoMotor,2,0,0);
