@@ -35,7 +35,7 @@ int QRCodeDecode(char* Data,int MaxDataLen) {
         // Get time from .dat file
         //==============================
         FILE *fp;
-        fp = fopen("./QR.dat", "r");  // read from QR.dat
+        fp = fopen("/mnt/ramdisk/QR.dat", "r");  // read from QR.dat
         char time_file[32];
         //fgets(time_file, 32, (FILE*)fp);      // get the scan time from the first line
         fgets(time_file, 32, (FILE*)fp);     // get the scan time from the first line
