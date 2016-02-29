@@ -103,7 +103,7 @@ void RobotApp(int argc, char *argv[])
       case 3 :   // other error
         // code
         #ifdef DEBUG_ABORT
-          printf ("Erro while scanning QR code\n");  // log to console
+          printf ("Error while scanning QR code\n");  // log to console
         #endif
         break;
       default :

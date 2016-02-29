@@ -66,14 +66,14 @@ echo "0" > /mnt/ramdisk/QR.dat
 $debug&& echo -e "${BG}[$(date | cut -c 12-19)]${NC} Raspistill saving ${ORANGE}QR.jpg${NC} to ${CYAN}tmpfs: /mnt/ramdisk/ (RAM)${NC}"
 #Raspistill: vertical and horizontal flip: (-vf, -hf) in output (-o) file (QR.jpg), saved on RAM, accessible at /io 
 #-w -h : width and height; lowest 640x480; should hopefully be faster at lower quality shots. -q 10: quality (0-100). 100: uncompressed. 10 should deliver lower quality.
-raspistill -o /mnt/ramdisk/QR.jpg --nopreview --exposure sports --timeout 1 2> /mnt/ramdisk/raspistill.dat
-wait
+raspistill -o /mnt/ramdisk/QR.jpg >> /mnt/ramdisk/raspistill.dat
+
 
 #print QR-code data (-q parameter suppresses other output) 
-zbarimg -q /mnt/ramdisk/QR.jpg > /mnt/ramdisk/QRTemp
-QRData=$(cat /mnt/ramdisk/QRTemp)
-echo $QRData >> /mnt/ramdisk/QR.dat
-
+#zbarimg -q /mnt/ramdisk/QR.jpg > /mnt/ramdisk/QRTemp
+#QRData=$(cat /mnt/ramdisk/QRTemp)
+#echo $QRData >> /mnt/ramdisk/QR.dat
+zbarimg -q /mnt/ramdisk/QR.jpg >> /mnt/ramdisk/QR.dat
 #add an additional space to QR.dat in order to make sure we have at least 3 lines in QR.dat (redundancy for follow-up sed commands)
 echo $'\n' >> /mnt/ramdisk/QR.dat
 
@@ -90,4 +90,3 @@ $debug&& echo -e "${CYAN}--------------------------------${NC}"
 #print QR.dat to std output.
 $debug&& head -n 3 /mnt/ramdisk/QR.dat
 $debug&& echo -e "${CYAN}--------------------------------${NC}"
-
