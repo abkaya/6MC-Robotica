@@ -11,6 +11,8 @@ CFLAGS += -g -DLINUX -Wall -I$(ML) -I$(ML_ROB) -I.
 LFLAGS += -lpthread -L$(ML) -lrt
 
 OBJECTS=main.o robotapp.o qrcode.o tagreader.o $(ML_ROB)timestep.o $(ML_ROB)TimeSupport.o $(ML)lin-rpi-serlib.o $(ML)lin-rs485client.o $(ML)crc.o $(ML)rf-cc1101.o $(ML)lego-motor.o $(ML)lego-sensor.o $(ML)lin-delay.o $(ML)lin-gpio.o $(ML)lin-lego-motor-log.o $(ML)pwr-liion1a.o $(ML)ansi.o $(ML)imu.o
+#include shell scripts
+SHELLSCRIPTS= QRDecoder.sh tagreader.sh mkRamDisk.sh
 
 all: kennismaking
 Debug: kennismaking
@@ -18,6 +20,8 @@ kennismaking: $(OBJECTS)
 	$(CC) $(CFLAGS) $(LFLAGS) $(OBJECTS) -o $(APP_BINARY)
 
 -include $(OBJECTS:.o=.d)
+-include $(SHELLSCRIPTS:.sh)
+
 
 %.o: %.c
 	$(CC) -c $(CFLAGS) $*.c -o $*.o
@@ -26,11 +30,13 @@ kennismaking: $(OBJECTS)
 cleanDebug: clean
 clean:
 	rm -f $(OBJECTS)
+	rm -f *.sh
 	rm -f $(OBJECTS:.o=.d)
 	rm -f $(APP_BINARY)
 install:
 	chmod +x $(APP_BINARY)
 	sshpass -p $(REMOTE_PASS) scp -o StrictHostKeyChecking=no  $(APP_BINARY) $(REMOTE_SERVER):$(REMOTE_PATH)
+	sshpass -p $(REMOTE_PASS) scp -o StrictHostKeyChecking=no $(SHELLSCRIPTS) $(REMOTE_SERVER):$(REMOTE_PATH)
 rundebug:
 	sshpass -p $(REMOTE_PASS) ssh -t $(REMOTE_SERVER)  "sudo gdbserver localhost:5000 $(REMOTE_PATH)/$(APP_BINARY)"
 runnodebug:

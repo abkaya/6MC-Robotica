@@ -5,7 +5,7 @@
 //  Commissioned by University of Antwerp
 //
 //========================================
-
+#include <stdlib.h>
 #include <stdio.h>
 
 #define DEBUG_ABORT
