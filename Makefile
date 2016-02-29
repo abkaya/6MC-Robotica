@@ -12,7 +12,7 @@ LFLAGS += -lpthread -L$(ML) -lrt
 
 OBJECTS=main.o robotapp.o qrcode.o tagreader.o $(ML_ROB)timestep.o $(ML_ROB)TimeSupport.o $(ML)lin-rpi-serlib.o $(ML)lin-rs485client.o $(ML)crc.o $(ML)rf-cc1101.o $(ML)lego-motor.o $(ML)lego-sensor.o $(ML)lin-delay.o $(ML)lin-gpio.o $(ML)lin-lego-motor-log.o $(ML)pwr-liion1a.o $(ML)ansi.o $(ML)imu.o
 #include shell scripts
-SHELLSCRIPTS= QRDecoder.sh tagreader.sh mkRamDisk.sh
+SHELLSCRIPTS= QRDecoder.sh tagreader.sh mkRamdisk.sh
 
 all: kennismaking
 Debug: kennismaking
@@ -30,7 +30,7 @@ kennismaking: $(OBJECTS)
 cleanDebug: clean
 clean:
 	rm -f $(OBJECTS)
-	rm -f *.sh
+	rm -f $(SHELLSCRIPTS)
 	rm -f $(OBJECTS:.o=.d)
 	rm -f $(APP_BINARY)
 install:

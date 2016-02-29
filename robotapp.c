@@ -12,8 +12,8 @@
 #define maxContentLength 30   // max amount of chars in content
 
 #define DEBUG_ABORT
-#define testQR
-//#define testTag
+//#define testQR
+#define testTag
 
 void RobotApp(int argc, char *argv[])
 {
