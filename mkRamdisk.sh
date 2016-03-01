@@ -19,7 +19,7 @@ CreateDisk() {
 	sudo mkdir /mnt/ramdisk/
 	sudo mount -t tmpfs -o size=100m tmpfs /mnt/ramdisk/
 	sudo chown pi /mnt/ramdisk/
-	CheckDisk
+	echo -e "${BG}[$(date | cut -c 12-19)]${NC} RAMDISK /mnt/ramdisk created : [${GREEN}INFO${NC}]"
 }
 
 CheckDisk() {
@@ -29,7 +29,7 @@ CheckDisk() {
 		echo -e "${BG}[$(date | cut -c 12-19)]${NC} RAMDISK /mnt/ramdisk/ not found. Creating now : [${ORANGE}INFO${NC}]"
 		CreateDisk
 	else
-		echo -e "${BG}[$(date | cut -c 12-19)]${NC} RAMDISK /mnt/ramdisk found or created : [${GREEN}INFO${NC}]"
+		echo -e "${BG}[$(date | cut -c 12-19)]${NC} RAMDISK /mnt/ramdisk found : [${GREEN}INFO${NC}]"
 	fi
 }
 
