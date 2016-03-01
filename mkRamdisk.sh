@@ -26,8 +26,8 @@ CheckDisk() {
 	dirMade=$(ls -laG / | grep /mnt/ramdisk)
 	diskMade=$(df -h | grep /mnt/ramdisk)
 	if [[ ! $dirMade && ! $diskMade ]]; then
-		CreateDisk
 		echo -e "${BG}[$(date | cut -c 12-19)]${NC} RAMDISK /mnt/ramdisk/ not found. Creating now : [${ORANGE}INFO${NC}]"
+		CreateDisk
 	else
 		echo -e "${BG}[$(date | cut -c 12-19)]${NC} RAMDISK /mnt/ramdisk found or created : [${GREEN}INFO${NC}]"
 	fi
