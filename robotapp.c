@@ -8,6 +8,7 @@
 
 #include "robotapp.h"
 #include "qrcode.h"
+#include "tagreader.h"
 
 #define maxContentLength 30   // max amount of chars in content
 

@@ -76,6 +76,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="robotapp.h" />
+		<Unit filename="tagreader.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tagreader.h" />
 		<Extensions>
 			<code_completion>
 				<search_path add="/home/lubuntu/minimod/Libs" />
