@@ -64,6 +64,10 @@
 		</Unit>
 		<Unit filename="../lib/timestep.h" />
 		<Unit filename="Makefile" />
+		<Unit filename="dijkstra.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="dijkstra.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
