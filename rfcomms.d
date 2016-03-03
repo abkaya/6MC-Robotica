@@ -1,4 +1,4 @@
-robotapp.o: robotapp.c robotapp.h project.h \
+rfcomms.o: rfcomms.c rfcomms.h robotapp.h project.h \
  /home/lubuntu/minimod/Libs/rs485client.h project.h \
  /home/lubuntu/minimod/Libs/lin-rs485client.h \
  /home/lubuntu/minimod/Libs/rs485.h \
@@ -18,4 +18,4 @@ robotapp.o: robotapp.c robotapp.h project.h \
  /home/lubuntu/minimod/Libs/pwr-liion1aRegs.h \
  /home/lubuntu/minimod/Libs/lin-delay.h \
  /home/lubuntu/robotica/lib/TimeSupport.h \
- /home/lubuntu/minimod/Libs/datatypes.h qrcode.h tagreader.h rfcomms.h
+ /home/lubuntu/minimod/Libs/datatypes.h

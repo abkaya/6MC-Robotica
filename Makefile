@@ -10,7 +10,7 @@ LOGFILE='log.csv'
 CFLAGS += -g -DLINUX -Wall -I$(ML) -I$(ML_ROB) -I.
 LFLAGS += -lpthread -L$(ML) -lrt
 
-OBJECTS=main.o robotapp.o qrcode.o tagreader.o $(ML_ROB)timestep.o $(ML_ROB)TimeSupport.o $(ML)lin-rpi-serlib.o $(ML)lin-rs485client.o $(ML)crc.o $(ML)rf-cc1101.o $(ML)lego-motor.o $(ML)lego-sensor.o $(ML)lin-delay.o $(ML)lin-gpio.o $(ML)lin-lego-motor-log.o $(ML)pwr-liion1a.o $(ML)ansi.o $(ML)imu.o
+OBJECTS=main.o robotapp.o qrcode.o tagreader.o rfcomms.o $(ML_ROB)timestep.o $(ML_ROB)TimeSupport.o $(ML)lin-rpi-serlib.o $(ML)lin-rs485client.o $(ML)crc.o $(ML)rf-cc1101.o $(ML)lego-motor.o $(ML)lego-sensor.o $(ML)lin-delay.o $(ML)lin-gpio.o $(ML)lin-lego-motor-log.o $(ML)pwr-liion1a.o $(ML)ansi.o $(ML)imu.o
 #include shell scripts
 SHELLSCRIPTS= QRDecoder.sh tagreader.sh mkRamdisk.sh
 
