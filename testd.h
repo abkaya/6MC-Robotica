@@ -16,29 +16,29 @@ typedef struct
     char Visited;			//flag: visited or not
     int DV;                 //Distance value
     int Previous;           //Previous node
-    int Next;        //Next node
+    //int Next;             //Next node
     int NextAbsDir;         //Absolute direction to next node (0=N, 1=E, 2=S, 3=W)
     int NextRelDir;         //Relative direction to next node (-1:no direction, 1=turn left, 2=forward, 3=turn right)
     int Queued;
 } NodeStruct;
 
-//linked list
-struct llist
-{
-    int val;
-    struct llist * next;
-};
 
 //other declarations
 int Current;
-int* b,c;
-int k,n,i;
-int* toVisit[9];
+int b,c;
+int k,n,i,j;
+int PathLength, Node;
+
+int toVisit[9];
+
+int LowestDV=999;
+
+//to be used for dynamic allocation of an integer array to store the dijkstra path's  indexes
+int Path[9];
 
 const int MapSize=9;
 const char Graph[10]="Graph.dat";
 FILE * fp;
-
 
 
 /**
@@ -48,7 +48,6 @@ FILE * fp;
  * \return
 */
 void ReadNodes(NodeStruct *Nodes, int MapSize);
-
 
 /**
  * \brief Calculate path using dijkstra method.
@@ -69,7 +68,28 @@ int Dijkstra(NodeStruct *Nodes, int MapSize,int Start,int Finish);
 */
 void InitDijkstra(NodeStruct *Nodes, int MapSize, int Start);
 
+/**
+ * \brief Sorts the "toVisit[]" queue
+ * \param Nodes :Array of nodes describing the map
+ * \param toVisit: Array of nodes yet to visit, thus array of nodes yet to become the "Current Node"
+*/
+void SortQueue(NodeStruct *Nodes,int *toVisit);
 
-int SortQueue(NodeStruct *Nodes,int *toVisit);
+/**
+ * \brief Swaps one integer value with another
+ * \param b: first integer
+ * \param c: second integer
+*/
 void Swap(int *b,int *c);
+
+/**
+ * \brief Puts the Dijkstra-defined path in a dynamically allocated integer array
+ * \param Nodes :Array of nodes describing the map
+ * \param MapSize :Number of nodes in Map
+ * \param Finish :Finish node index for the path to be calculated
+*/
+int GetPath(NodeStruct *Nodes, int MapSize, int Finish);
+
+//return lowest node --- if return -1; start node has been reached.
+int LowestDVNode(NodeStruct *Nodes, int Node);
 #endif

@@ -18,11 +18,30 @@ int main()
     printf("Running ReadNodes\n");
 #endif
     ReadNodes(Nodes,MapSize);
-    //Calculate path using dijkstra method.
+
+    //Display Graph
+#ifdef debug
+    for(i=0; i<MapSize; i++)
+    {
+        for(k=0; k<4; k++)
+        {
+            printf("%d\t", Nodes[i].Neighbours[k]);
+        }
+        for(k=0; k<4; k++)
+        {
+            printf("%d\t", Nodes[i].Distance[k]);
+            if(k==3)
+            printf("\n");
+        }
+    }
+#endif
+
+
 #ifdef debug
     printf("\nRunning Dijkstra\n");
 #endif
     Dijkstra(Nodes,MapSize,0,8);
+
 
     return 0;
 }
@@ -40,50 +59,71 @@ int Dijkstra(NodeStruct *Nodes, int MapSize, int Start, int Finish)
     InitDijkstra(Nodes, MapSize, Start);
 
     for (i=0; i <MapSize; ++i)
-        toVisit[i]=-1;
+        *(toVisit+i)=-1;
 
-    //define distance value of neighbours and queue them without sorting
+    //define distance value of neighbours and queue them. First without sorting, then handle sorting for each node added to the queue
     n=0;
+    //iterate over the nodes, starting with the neighbours of the current node
     for(i=0; i<MapSize; i++)
     {
+        //there are potentially four neighbouring nodes, so consider each side
         for(k=0; k<4; k++)
         {
-            if(Nodes[Current].Neighbours[k]!=-1)
-                if(Nodes[Nodes[Current].Neighbours[k]].Visited==0 && Nodes[Nodes[Current].Neighbours[k]].Queued==0)
+            //if the neighbour exists, and if it has not yet been visited, find the distance value
+            if(Nodes[Current].Neighbours[k]!=-1 && Nodes[Nodes[Current].Neighbours[k]].Visited==0 )
+            {
+                //if the calculated DV (current node DV+neighbour distance cost) is less than the neighbour node's DV, assign this new DV.
+                if( Nodes[Nodes[Current].Neighbours[k]].DV > ( Nodes[Current].DV + Nodes[Current].Distance[k] ) )
+                    Nodes[Nodes[Current].Neighbours[k]].DV = ( Nodes[Current].DV + Nodes[Current].Distance[k] );
+
+                //The neighbouring node has not yet been visited, so we'll add it in a queue to be visit when it is its turn.
+                if(Nodes[Nodes[Current].Neighbours[k]].Queued==0)
                 {
-
-                    if( Nodes[Nodes[Current].Neighbours[k]].DV > ( Nodes[Current].DV + Nodes[Current].Distance[k] ) )
-                        Nodes[Nodes[Current].Neighbours[k]].DV = ( Nodes[Current].DV + Nodes[Current].Distance[k] );
-
-
-                    toVisit[n]=Nodes[Current].Neighbours[k];
+                    *(toVisit+n)=Nodes[Current].Neighbours[k];
                     Nodes[Nodes[Current].Neighbours[k]].Queued=1;
 
                     n++;
                 }
+            }
         }
-        //The neighbours of this current node are marked for visitation. Now let's sort.
+        //the current node's neighbours have all been assigned a distance value. Time to mark it as visited and move onto the next "Current" node.
         Nodes[Current].Visited=1;
-        Current=SortQueue(Nodes,toVisit);
+        //The neighbours of this current node are marked for visitation. Now let's sort, in order to visit the lowest DV with the lowest indexes first
+        SortQueue(Nodes,toVisit);
+        //Because the toVisit array/queue is now sorted, we're confident that toVisit[i] is the next appropriate "current node"
+        Current=*(toVisit+i);
+
+        //repeat the loop until all nodes have been visited. By this algorithm's nature, MapSize is the number of iterations needed to visit each node.
     }
 
-#ifdef debug
-    printf("Sorted Queue\n");
-#endif
 
-    for(n=0; n<MapSize; n++)
+#ifdef debug
+    printf("Sorted Queue:\n");
+
+    for(n=0; n<MapSize-1; n++)
     {
-#ifdef debug
-        printf("%d ", toVisit[n]);
-#endif
-    }
+        printf("Node: %d , DV: %d, Visited: %d\n", *(toVisit+n),Nodes[*(toVisit+n)].DV,Nodes[*(toVisit+n)].Visited);
 
+    }
+#endif
+
+
+//THE DIJKSTRA PATH, USING THE PREVIOUS NODES, STARTING AT THE FINISH!
+    PathLength=GetPath(Nodes,MapSize,Finish);
+#ifdef debug
+    printf("PathLength: %d\n",PathLength);
+    printf("Shortest Path: \n");
+    for(i=0; i<PathLength; i++)
+    {
+        printf("%d -> ",*(Path+i));
+    }
+#endif
     return 0;
 }
 
 void ReadNodes(NodeStruct *Nodes, int MapSize)
 {
-    int i = 0;
+    i = 0;
     fp=fopen (Graph, "r");
 
     if(fp!=NULL)
@@ -114,6 +154,7 @@ void InitDijkstra(NodeStruct *Nodes, int MapSize, int Start)
             Nodes[j].DV=0;
         else
             Nodes[j].DV=999;
+        //initialise previous nodes with -1. This is important, because at the end, the only node with previous -1 will be the starting node, which is our indication when going from finish to start, using previous nodes.
         Nodes[j].Previous=-1;
 
 #ifdef debug
@@ -122,46 +163,68 @@ void InitDijkstra(NodeStruct *Nodes, int MapSize, int Start)
     }
 }
 
-int SortQueue(NodeStruct *Nodes, int *toVisit)
+void SortQueue(NodeStruct *Nodes, int *toVisit)
 {
-    int i,j,flag,Next;
-    for(i=0; i<5; i++)
+    int j;
+    for(j=0; j<MapSize-1; j++)
     {
+        if(Nodes[*(toVisit+j)].DV>Nodes[*(toVisit+j+1)].DV)
+            Swap((toVisit+j),(toVisit+j+1));
+        else if(Nodes[*(toVisit+j)].DV==Nodes[*(toVisit+j+1)].DV && *(toVisit+j)>*(toVisit+j+1))
+            Swap((toVisit+j),(toVisit+j+1));
 
-        flag=0;
-        for(j=0; j<4-i; j++)
-        {
-            if( toVisit[j]!=-1 && toVisit[j+1]!=-1)
-            {
-                if(Nodes[toVisit[j]].DV>Nodes[toVisit[j+1]].DV || (Nodes[toVisit[j]].DV==Nodes[toVisit[j+1]].DV && toVisit[j]<toVisit[j+1]))
-                {
-                    flag=1;
-                    Swap(toVisit[j],toVisit[j+1]);
-                }
-            }
-        }
     }
-    //first non visited
-    for(i=0;i<MapSize;i++){
-        if(Nodes[toVisit[i]].Visited==0){
-            Next=toVisit[i];
-            printf("%d",Nodes[toVisit[i]].Visited);
-            printf("%d",Next);
-            break;
-        }
-    }
-    if(flag==0)
-        return Next;
-    else
-        return -1;
 }
 
 
-
+//Swap two integers
 void Swap(int *b,int *c)
 {
     int x;
-    x=b;
+    x=*b;
     b=c;
-    c=x;
+    c=&x;
+}
+
+
+int GetPath(NodeStruct *Nodes, int MapSize, int Finish)
+{
+
+    Node=Finish;
+
+    PathLength=0; // count the number of nodes in path, excluding start node
+    printf("Previous: %d\n",LowestDVNode(Nodes,Node));
+    while(LowestDVNode(Nodes,Node)!=-1)
+    {
+
+        Node=LowestDVNode(Nodes,Node);
+        Path[PathLength]=Node;
+        PathLength++;
+        printf("Path node: %d",Path[PathLength]);
+    }
+
+    return PathLength;
+}
+
+int LowestDVNode(NodeStruct *Nodes, int Node)
+{
+    LowestDV=999;
+    for(k=0; k<4; k++)
+    {
+        printf("First Neighbour: %d\n",Nodes[Node].Neighbours[k]);
+        if(Nodes[Node].Neighbours[k]!=-1)
+        {
+            if(Nodes[Nodes[Node].Neighbours[k]].DV<Nodes[Node].DV && Nodes[Nodes[Node].Neighbours[k]].DV < LowestDV)
+            {
+                LowestDV = Nodes[Nodes[Node].Neighbours[k]].DV;
+                Nodes[Node].Previous=Nodes[Node].Neighbours[k];
+                Node=Nodes[Node].Neighbours[k];
+                printf("previous: %d\n",Nodes[Node].Previous);
+            }
+        }
+    }
+    if (LowestDV==999)
+        return -1;
+    else
+        return Nodes[Node].Previous;
 }
