@@ -12,6 +12,8 @@
 
 int Dijkstra(NodeStruct *Map,int MapSize,int Start,int Finish)
 {
+    NodeStruct Map[MapSize];
+    ReadMap(Map, MapSize);
     return 0;
 }
 
