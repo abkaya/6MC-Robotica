@@ -40,7 +40,7 @@ int main()
 #ifdef debug
     printf("\nRunning Dijkstra\n");
 #endif
-    Dijkstra(Nodes,MapSize,0,8);
+    Dijkstra(Nodes,MapSize,0,7);
 
 
     return 0;
@@ -73,9 +73,11 @@ int Dijkstra(NodeStruct *Nodes, int MapSize, int Start, int Finish)
             if(Nodes[Current].Neighbours[k]!=-1 && Nodes[Nodes[Current].Neighbours[k]].Visited==0 )
             {
                 //if the calculated DV (current node DV+neighbour distance cost) is less than the neighbour node's DV, assign this new DV.
-                if( Nodes[Nodes[Current].Neighbours[k]].DV > ( Nodes[Current].DV + Nodes[Current].Distance[k] ) )
+                if( Nodes[Nodes[Current].Neighbours[k]].DV > ( Nodes[Current].DV + Nodes[Current].Distance[k] ) ){
                     Nodes[Nodes[Current].Neighbours[k]].DV = ( Nodes[Current].DV + Nodes[Current].Distance[k] );
-
+                    Nodes[Nodes[Current].Neighbours[k]].Previous=Current;
+                    printf("node: %d, previous node: %d\n",Nodes[Current].Neighbours[k],Nodes[Nodes[Current].Neighbours[k]].Previous);
+                    }
                 //The neighbouring node has not yet been visited, so we'll add it in a queue to be visit when it is its turn.
                 if(Nodes[Nodes[Current].Neighbours[k]].Queued==0)
                 {
@@ -193,12 +195,10 @@ int GetPath(NodeStruct *Nodes, int MapSize, int Finish)
     Node=Finish;
 
     PathLength=0; // count the number of nodes in path, excluding start node
-    printf("Previous: %d\n",LowestDVNode(Nodes,Node));
-    while(LowestDVNode(Nodes,Node)!=-1)
+    while(Node!=-1)
     {
-
-        Node=LowestDVNode(Nodes,Node);
         Path[PathLength]=Node;
+        Node=Nodes[Node].Previous;
         PathLength++;
         printf("Path node: %d",Path[PathLength]);
     }
@@ -206,25 +206,3 @@ int GetPath(NodeStruct *Nodes, int MapSize, int Finish)
     return PathLength;
 }
 
-int LowestDVNode(NodeStruct *Nodes, int Node)
-{
-    LowestDV=999;
-    for(k=0; k<4; k++)
-    {
-        printf("First Neighbour: %d\n",Nodes[Node].Neighbours[k]);
-        if(Nodes[Node].Neighbours[k]!=-1)
-        {
-            if(Nodes[Nodes[Node].Neighbours[k]].DV<Nodes[Node].DV && Nodes[Nodes[Node].Neighbours[k]].DV < LowestDV)
-            {
-                LowestDV = Nodes[Nodes[Node].Neighbours[k]].DV;
-                Nodes[Node].Previous=Nodes[Node].Neighbours[k];
-                Node=Nodes[Node].Neighbours[k];
-                printf("previous: %d\n",Nodes[Node].Previous);
-            }
-        }
-    }
-    if (LowestDV==999)
-        return -1;
-    else
-        return Nodes[Node].Previous;
-}

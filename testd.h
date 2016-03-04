@@ -90,6 +90,4 @@ void Swap(int *b,int *c);
 */
 int GetPath(NodeStruct *Nodes, int MapSize, int Finish);
 
-//return lowest node --- if return -1; start node has been reached.
-int LowestDVNode(NodeStruct *Nodes, int Node);
 #endif
