@@ -193,14 +193,31 @@ void InitDijkstra(NodeStruct *Nodes, int MapSize, int Start)
 //Sorts the "toVisit[]" queue
 void SortQueue(NodeStruct *Nodes, int *toVisit)
 {
-    int j;
-    for(j=0; j<MapSize-1; j++)
-    {
-        if(Nodes[*(toVisit+j)].DV>Nodes[*(toVisit+j+1)].DV)
-            Swap((toVisit+j),(toVisit+j+1));
-        else if(Nodes[*(toVisit+j)].DV==Nodes[*(toVisit+j+1)].DV && *(toVisit+j)>*(toVisit+j+1))
-            Swap((toVisit+j),(toVisit+j+1));
+#ifdef debug
+    printf("\nSorting: \n");
+#endif
+    int j=0;
+    //for(j=0; j<MapSize-1; j++)
 
+    while(*(toVisit+j+1)!=-1){
+#ifdef debug
+        printf("index %d: , node: %d -> DV: %d ;;; index %d , node: %d -> DV: %d \n",j,*(toVisit+j),Nodes[*(toVisit+j)].DV, j+1,*(toVisit+j+1),Nodes[*(toVisit+j+1)].DV);
+#endif
+
+        if(Nodes[*(toVisit+j)].DV>Nodes[*(toVisit+j+1)].DV)
+        {
+#ifdef debug
+            printf("index %d: , node: %d -> DV: %d bigger than index %d , node: %d -> DV: %d \n",j,*(toVisit+j),Nodes[*(toVisit+j)].DV, j+1,*(toVisit+j+1),Nodes[*(toVisit+j+1)].DV);
+#endif
+            Swap((toVisit+j),(toVisit+j+1));
+        }
+        else if(Nodes[*(toVisit+j)].DV==Nodes[*(toVisit+j+1)].DV && *(toVisit+j)>*(toVisit+j+1)){
+        #ifdef debug
+            printf("index %d: , NODE: %d -> DV: %d bigger than index %d , NODE: %d -> DV: %d \n",j,*(toVisit+j),Nodes[*(toVisit+j)].DV, j+1,*(toVisit+j+1),Nodes[*(toVisit+j+1)].DV);
+#endif
+            Swap((toVisit+j),(toVisit+j+1));
+            }
+    j++;
     }
 }
 
@@ -211,8 +228,8 @@ void Swap(int *b,int *c)
 {
     int x;
     x=*b;
-    b=c;
-    c=&x;
+    *b=*c;
+    *c=x;
 }
 
 
