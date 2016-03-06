@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
+
 
 typedef struct
 {
@@ -13,41 +13,38 @@ typedef struct
     int Distance[4];		//Distance to neighbouring nodes, in order N,E,S,W
 
     //Solver variables
-    char Visited;			//flag: visited or not
+    int Visited;			//flag: visited or not; 1: Visited; 0: not Visited
     int DV;                 //Distance value
     int Previous;           //Previous node
-    //int Next;             //Next node
+    int Next;               //Next node
     int NextAbsDir;         //Absolute direction to next node (0=N, 1=E, 2=S, 3=W)
-    int NextRelDir;         //Relative direction to next node (-1:no direction, 1=turn left, 2=forward, 3=turn right)
+    int NextRelDir;         //Relative direction to next node (-1:no direction, 1=turn left, 2=forward, 3=turn right) // Default: 2: forward -> PLACE ROBOTS IN FORWARD DIRECTION AT START!
     int Queued;
 } NodeStruct;
 
 
 //other declarations
+int Start;
+int Finish;
 int Current;
 int b,c;
 int k,n,i,j;
 int PathLength, Node;
 
+//Number of nodes in the Graph
 int toVisit[9];
 
 int LowestDV=999;
 
 //to be used for dynamic allocation of an integer array to store the dijkstra path's  indexes
-int Path[9];
+int *Path[9];
 
 const int MapSize=9;
 const char Graph[10]="Graph.dat";
+
+//used to read the Graph.dat
 FILE * fp;
 
-
-/**
- * \brief Read Graph/Nodes and their Members' values from a data file
- * \param Nodes :Array of nodes describing the map --- Equivalent of 'Graaf' On page 58 in "Mobiele Communicatie - Labo Robotica"
- * \param MapSize :Number of nodes in Map
- * \return
-*/
-void ReadNodes(NodeStruct *Nodes, int MapSize);
 
 /**
  * \brief Calculate path using dijkstra method.
@@ -61,7 +58,15 @@ void ReadNodes(NodeStruct *Nodes, int MapSize);
 int Dijkstra(NodeStruct *Nodes, int MapSize,int Start,int Finish);
 
 /**
- * \brief Set Initial DV, Visited and Previous values for all nodes.
+ * \brief Read Graph/Nodes and their Members' values from a data file
+ * \param Nodes :Array of nodes describing the map --- Equivalent of 'Graaf' On page 58 in "Mobiele Communicatie - Labo Robotica"
+ * \param MapSize :Number of nodes in Map
+ * \return
+*/
+void ReadNodes(NodeStruct *Nodes, int MapSize);
+
+/**
+ * \brief Set Initial DV, Visited, Previous and Next values for all nodes.
  * \param Nodes :Array of nodes describing the map
  * \param MapSize :Number of nodes in Map
  * \param Start :Start node index for the path to be calculated
@@ -83,11 +88,27 @@ void SortQueue(NodeStruct *Nodes,int *toVisit);
 void Swap(int *b,int *c);
 
 /**
- * \brief Puts the Dijkstra-defined path in a dynamically allocated integer array
+ * \brief Calculates the Dijkstra-defined path node indexes in an integer array //could be optimized with dynamic array allocation
  * \param Nodes :Array of nodes describing the map
  * \param MapSize :Number of nodes in Map
+ * \param Start :Start node index for the path to be calculated
  * \param Finish :Finish node index for the path to be calculated
 */
-int GetPath(NodeStruct *Nodes, int MapSize, int Finish);
+int DefPath(NodeStruct *Nodes, int MapSize, int Start, int Finish);
 
+/**
+ * \brief Uses the Next/Previous nodes to find the Next Absolute and Relative Direction for the robot's movements
+ * \param Nodes :Array of nodes describing the map
+ * \param MapSize :Number of nodes in Map
+ * \param Start :Start node index for the path to be calculated
+ * \param Finish :Finish node index for the path to be calculated
+*/
+void DefDirs(NodeStruct *Nodes, int MapSize, int Start, int Finish);
+
+/**
+ * \brief True modulo operator (using the C _remainder_ operator)
+ * \param a in a % b
+ * \param b in a % b
+*/
+int mod(int a, int b);
 #endif

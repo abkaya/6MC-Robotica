@@ -11,7 +11,10 @@
 
 int main()
 {
+    Start=0;
+    Finish=7;
     //Create an array of nodes describing the map
+    //NodeStruct* Nodes = malloc(MapSize * sizeof(NodeStruct));
     NodeStruct Nodes[MapSize];
     //Populate the members Neighbours[] and Distance[] in these nodes.
 #ifdef debug
@@ -31,30 +34,35 @@ int main()
         {
             printf("%d\t", Nodes[i].Distance[k]);
             if(k==3)
-            printf("\n");
+                printf("\n");
         }
     }
-#endif
 
-
-#ifdef debug
     printf("\nRunning Dijkstra\n");
 #endif
-    Dijkstra(Nodes,MapSize,0,7);
+    Dijkstra(Nodes,MapSize,Start,Finish);
 
-
+#ifdef debug
+    printf("\nShortest Path: \n");
+    printf("-> %d ", Start);
+    Current=Start;
+    while(Nodes[Current].Next!=-1)
+    {
+        printf("-> %d ", Nodes[Current].Next);
+        Current=Nodes[Current].Next;
+    }
+#endif
     return 0;
 }
 
 
 
+//Set Initial DV, Visited and Previous values for all nodes.
 int Dijkstra(NodeStruct *Nodes, int MapSize, int Start, int Finish)
 {
     Current=Start;
-
-
 #ifdef debug
-    printf("Init dijkstra");
+    printf("Init dijkstra\n");
 #endif
     InitDijkstra(Nodes, MapSize, Start);
 
@@ -73,11 +81,16 @@ int Dijkstra(NodeStruct *Nodes, int MapSize, int Start, int Finish)
             if(Nodes[Current].Neighbours[k]!=-1 && Nodes[Nodes[Current].Neighbours[k]].Visited==0 )
             {
                 //if the calculated DV (current node DV+neighbour distance cost) is less than the neighbour node's DV, assign this new DV.
-                if( Nodes[Nodes[Current].Neighbours[k]].DV > ( Nodes[Current].DV + Nodes[Current].Distance[k] ) ){
+                if( Nodes[Nodes[Current].Neighbours[k]].DV > ( Nodes[Current].DV + Nodes[Current].Distance[k] ) )
+                {
                     Nodes[Nodes[Current].Neighbours[k]].DV = ( Nodes[Current].DV + Nodes[Current].Distance[k] );
+                    //Because this current node's DV is lower than the neighbour's DV, we can safely assume this node is the neighbouring node's "previous" node with respect to the start node.
                     Nodes[Nodes[Current].Neighbours[k]].Previous=Current;
-                    printf("node: %d, previous node: %d\n",Nodes[Current].Neighbours[k],Nodes[Nodes[Current].Neighbours[k]].Previous);
-                    }
+                    //Defining the next node is dependent on the finish node, therefore we'll cover that in the DefPath function.
+#ifdef debug
+                    printf("\nnode: %d, previous node: %d",Nodes[Current].Neighbours[k],Nodes[Nodes[Current].Neighbours[k]].Previous);
+#endif
+                }
                 //The neighbouring node has not yet been visited, so we'll add it in a queue to be visit when it is its turn.
                 if(Nodes[Nodes[Current].Neighbours[k]].Queued==0)
                 {
@@ -97,10 +110,8 @@ int Dijkstra(NodeStruct *Nodes, int MapSize, int Start, int Finish)
 
         //repeat the loop until all nodes have been visited. By this algorithm's nature, MapSize is the number of iterations needed to visit each node.
     }
-
-
 #ifdef debug
-    printf("Sorted Queue:\n");
+    printf("\n\nSorted Queue:\n");
 
     for(n=0; n<MapSize-1; n++)
     {
@@ -108,21 +119,22 @@ int Dijkstra(NodeStruct *Nodes, int MapSize, int Start, int Finish)
 
     }
 #endif
-
-
 //THE DIJKSTRA PATH, USING THE PREVIOUS NODES, STARTING AT THE FINISH!
-    PathLength=GetPath(Nodes,MapSize,Finish);
+    PathLength=DefPath(Nodes,MapSize,Start,Finish);
 #ifdef debug
-    printf("PathLength: %d\n",PathLength);
-    printf("Shortest Path: \n");
-    for(i=0; i<PathLength; i++)
+    printf("\nPathLength: %d\n",PathLength);
+    printf("Shortest Path (Reversed): \n");
+    for(i=0; i<PathLength+1; i++)
     {
-        printf("%d -> ",*(Path+i));
+        printf("-> %d ",(int)*(Path+i));
     }
 #endif
-    return 0;
+    return PathLength;
 }
 
+
+
+//Read Graph/Nodes and their Members' values from a data file
 void ReadNodes(NodeStruct *Nodes, int MapSize)
 {
     i = 0;
@@ -138,11 +150,17 @@ void ReadNodes(NodeStruct *Nodes, int MapSize)
             i++;
         }
         fclose(fp);
+#ifdef debug
+        printf("\n");
+#endif
     }
     else
         printf("File does not exist.");
 }
 
+
+
+//Set Initial DV, Visited, Previous and Next values for all nodes.
 void InitDijkstra(NodeStruct *Nodes, int MapSize, int Start)
 {
     int j;
@@ -158,6 +176,11 @@ void InitDijkstra(NodeStruct *Nodes, int MapSize, int Start)
             Nodes[j].DV=999;
         //initialise previous nodes with -1. This is important, because at the end, the only node with previous -1 will be the starting node, which is our indication when going from finish to start, using previous nodes.
         Nodes[j].Previous=-1;
+        Nodes[j].Next=-1;
+        //Robots will move forward by default. This is useful for the DefDirs function which will disregard the first node and make the robot move forward by default.
+        Nodes[j].NextRelDir=2;
+        Nodes[j].NextAbsDir=-1;
+
 
 #ifdef debug
         printf("%d, %d, %d\n",Nodes[j].Visited,Nodes[j].DV,Nodes[j].Previous);
@@ -165,6 +188,9 @@ void InitDijkstra(NodeStruct *Nodes, int MapSize, int Start)
     }
 }
 
+
+
+//Sorts the "toVisit[]" queue
 void SortQueue(NodeStruct *Nodes, int *toVisit)
 {
     int j;
@@ -179,6 +205,7 @@ void SortQueue(NodeStruct *Nodes, int *toVisit)
 }
 
 
+
 //Swap two integers
 void Swap(int *b,int *c)
 {
@@ -189,7 +216,9 @@ void Swap(int *b,int *c)
 }
 
 
-int GetPath(NodeStruct *Nodes, int MapSize, int Finish)
+
+//Puts the Dijkstra-defined path node indexes in an integer array //could be optimized with dynamic array allocation
+int DefPath(NodeStruct *Nodes, int MapSize, int Start, int Finish)
 {
 
     Node=Finish;
@@ -197,12 +226,104 @@ int GetPath(NodeStruct *Nodes, int MapSize, int Finish)
     PathLength=0; // count the number of nodes in path, excluding start node
     while(Node!=-1)
     {
-        Path[PathLength]=Node;
+        //Assigning the nodes to the Path array, whilst keeping track of the Path's length.
+        *(Path+PathLength)=Node;
+        //This is the most convenient place to define the Next node, which is dependent on the Finish node, whereas the previous node was dependent on the Start node.
+        Nodes[Nodes[Node].Previous].Next=Node;
+#ifdef debug
+        printf("Previous Node: %d, Previous Node's Next node: %d \n", Nodes[Node].Previous,Nodes[Nodes[Node].Previous].Next);
+#endif
         Node=Nodes[Node].Previous;
-        PathLength++;
-        printf("Path node: %d",Path[PathLength]);
-    }
 
+        PathLength++;
+        //INFO
+        // The Developer can use Nodes[Start].Next while .Next != -1 to go from Start to Finish. The Developer can also use the reverse of the Path array pointer formed in this function
+    }
+    DefDirs(Nodes,MapSize,Start,Finish);
+    PathLength--;
     return PathLength;
 }
+
+
+
+//Uses the Next/Previous nodes to find the Next Absolute and Relative Direction for the robot's movements
+void DefDirs(NodeStruct *Nodes, int MapSize, int Start, int Finish)
+{
+    Current = Start;
+    while(Nodes[Current].Next!=-1)
+    {
+        //NextAbsDir found through the use of Neighbour index
+        for(k=0; k<4; k++)
+        {
+            if(Nodes[Current].Next == Nodes[Current].Neighbours[k])
+            {
+                Nodes[Current].NextAbsDir=k;
+            }
+        }
+
+        //PreviousAbsDir temporarily stored in a pad variable in order to find the NextRelDir
+        //PreviousAbsDir and NextAbsDir are on the SAME node.
+        //"pad" (=PreviousAbsDir) defines the node ENTRY direction
+        int pad;
+        for(k=0; k<4; k++)
+        {
+            if(Nodes[Current].Previous!=-1 && Nodes[Current].Previous == Nodes[Current].Neighbours[k])
+            {
+                pad=k;
+            }
+        }
+
+
+        int nad = Nodes[Current].NextAbsDir;
+        //NextRelDir found through the use of "pad"(~ENTRY direction) and "nad" (~NextAbsDir~EXIT direction)
+        //The following statements using the modulus function applies.
+        //Modulus function is an additional function, because the C-modulus operator is actually a remainder operator
+        if(Current!=Finish && Current != Start)
+        {
+
+            switch(pad)
+            {
+            case 0:
+                Nodes[Current].NextRelDir=nad;
+                break;
+
+            case 1:
+                Nodes[Current].NextRelDir=mod((nad-pad),4);
+                break;
+
+            case 2:
+                Nodes[Current].NextRelDir=mod((nad+pad),4);
+                break;
+
+            case 3:
+                Nodes[Current].NextRelDir=mod((nad-pad),4);
+                break;
+
+            default :
+                Nodes[Current].NextRelDir=-1;
+            }
+
+        }
+#ifdef debug
+        printf("\nNode: %d, NAD: %d, NRD: %d\n",Current, Nodes[Current].NextAbsDir,Nodes[Current].NextRelDir);
+#endif
+        Current=Nodes[Current].Next;
+    }
+}
+
+
+
+//true modulo operator (using the C _remainder_ operator)
+int mod(int a, int b)
+{
+    int r = a % b;
+    return r < 0 ? r + b : r;
+}
+
+
+
+
+
+
+
 
