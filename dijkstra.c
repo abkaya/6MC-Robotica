@@ -9,53 +9,6 @@
 #include "dijkstra.h"
 #define debug
 
-int main()
-{
-    Start=0;
-    Finish=7;
-    //Create an array of nodes describing the map
-    //NodeStruct* Nodes = malloc(MapSize * sizeof(NodeStruct));
-    NodeStruct Nodes[MapSize];
-    //Populate the members Neighbours[] and Distance[] in these nodes.
-#ifdef debug
-    printf("Running ReadNodes\n");
-#endif
-    ReadNodes(Nodes,MapSize);
-
-    //Display Graph
-#ifdef debug
-    for(i=0; i<MapSize; i++)
-    {
-        for(k=0; k<4; k++)
-        {
-            printf("%d\t", Nodes[i].Neighbours[k]);
-        }
-        for(k=0; k<4; k++)
-        {
-            printf("%d\t", Nodes[i].Distance[k]);
-            if(k==3)
-                printf("\n");
-        }
-    }
-
-    printf("\nRunning Dijkstra\n");
-#endif
-    Dijkstra(Nodes,MapSize,Start,Finish);
-
-#ifdef debug
-    printf("\nShortest Path: \n");
-    printf("-> %d ", Start);
-    Current=Start;
-    while(Nodes[Current].Next!=-1)
-    {
-        printf("-> %d ", Nodes[Current].Next);
-        Current=Nodes[Current].Next;
-    }
-#endif
-    return 0;
-}
-
-
 
 //Set Initial DV, Visited and Previous values for all nodes.
 int Dijkstra(NodeStruct *Nodes, int MapSize, int Start, int Finish)
