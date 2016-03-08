@@ -32,14 +32,14 @@ int k,n,i,j;
 int PathLength, Node;
 
 //Number of nodes in the Graph
-int toVisit[9];
+int toVisit[11];
 
 int LowestDV=999;
 
 //to be used for dynamic allocation of an integer array to store the dijkstra path's  indexes
-int *Path[9];
+int *Path[10];
 
-const int MapSize=9;
+const int MapSize=11;
 const char Graph[10]="Graph.dat";
 
 //used to read the Graph.dat
@@ -78,7 +78,7 @@ void InitDijkstra(NodeStruct *Nodes, int MapSize, int Start);
  * \param Nodes :Array of nodes describing the map
  * \param toVisit: Array of nodes yet to visit, thus array of nodes yet to become the "Current Node"
 */
-void SortQueue(NodeStruct *Nodes,int *toVisit);
+int SortQueue(NodeStruct *Nodes,int *toVisit);
 
 /**
  * \brief Swaps one integer value with another
