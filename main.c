@@ -67,7 +67,7 @@ void* AbortHandler(void *arg)
 			if (res > 0) printf("Abort handler: LegoMotorDirectControl() CH3 fail.\n");
 
 			printf("ABORT complete\n");
-			system("espeak -ven+f2 -k5 -a100 -s140 \"Safety abort.\" --stdout | aplay");
+			//system("espeak -ven+f2 -k5 -a100 -s140 \"Safety abort.\" --stdout | aplay");
 
 			fflush(stdout);
 			exit(-1);

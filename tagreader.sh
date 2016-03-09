@@ -7,4 +7,4 @@
 #
 #=======================================================
 
-scriptor APDU 2>/dev/null | grep '<' | tr -d ' ' | sed 's\<\\g' | sed 's\:Normalprocessing.\\g'
+scriptor APDU.dat 2>/dev/null | grep '<' | tr -d ' ' | sed 's\<\\g' | sed 's\:Normalprocessing.\\g'

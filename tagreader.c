@@ -15,8 +15,8 @@ int TagReaderGetUID(char *Data) {
     // Initialize Variables
     //==============================
     FILE *fp;        // create file object
-    int status;      // status value
     char line[32];   // data from read
+    int status;      // status value
 
     //==============================
     // Scan Tag
@@ -26,9 +26,11 @@ int TagReaderGetUID(char *Data) {
         printf("no file\n");
         /* Handle error */;
     }
-    while ( fgets(line, 32, fp) != NULL)  {
-        printf("line: %s\n", line);
+    if ( fgets(line, 32, fp) != NULL )  {
+        printf("line: %s",line);
+        Data = line;
     }
+    printf("Data: %s",Data);
     status = pclose(fp);
 
     //==============================
@@ -44,6 +46,8 @@ int TagReaderGetUID(char *Data) {
             printf("succeeded at pclose()\n");  // print status to debug console
         #endif
     }
+
+
 
     return 0;
 

@@ -16,10 +16,10 @@
 
 #define DEBUG_ABORT
 //#define testQR
-//#define testTag
+#define testTag
 //#define testDijkstra
-#define testCC1101send
-#define testCC1101receive
+//#define testCC1101send
+//#define testCC1101receive
 
 void RobotApp(int argc, char *argv[])
 {
@@ -34,7 +34,7 @@ void RobotApp(int argc, char *argv[])
     LegoMotorSetup(&LegoMotor,2,0,0);
     #ifdef DEBUG_ABORT
         printf ("Initialisation complete\n");
-        system ("espeak -ven+f2 -k5 -a50 -s150 \"Initialasition complete\" --stdout | aplay");
+        //system ("espeak -ven+f2 -k5 -a50 -s150 \"Initialasition complete\" --stdout | aplay");
     #endif
 
     //==============================
@@ -43,17 +43,17 @@ void RobotApp(int argc, char *argv[])
     #ifdef testQR     // Try to scan a QR-code every 5 seconds
         while (1) {
             system ("espeak -ven+f2 -k5 -a50 -s150 \"Testing QR code scanning\" --stdout | aplay");
-            res = QRCodeDecode(*qr_data, maxContentLength);   // Scan for QR code
-            printf("QR status: %i",res);                      // print status
-            _delay_ms(5000);
+            res = QRCodeDecode(*qr_data, maxContentLength);   // scan for QR code
+            printf("QR status: %i\n",res);                      // print status
+            _delay_ms(5000);                                  // wait 5 seconds
         }
     #endif
     #ifdef testTag     // Try to scan a QR-code every 5 seconds
         while (1) {
-            system ("espeak -ven+f2 -k5 -a50 -s150 \"Testing Tag scanning\" --stdout | aplay");
-            res = TagReaderGetUID( *tag_data );   // Scan for QR code
-            printf("tag status: %i",res);                      // print status
-            _delay_ms(5000);
+            //system ("espeak -ven+f2 -k5 -a50 -s150 \"Testing Tag scanning\" --stdout | aplay");
+            res = TagReaderGetUID( *tag_data );                         // scan tag
+            printf("tag status: %d   tag data: %s\n",res,*tag_data);       // print status
+            _delay_ms(5000);                                            // wait 5 seconds
         }
     #endif
     #ifdef testDijkstr     // Test dijkstra algorithm
@@ -123,7 +123,7 @@ void RobotApp(int argc, char *argv[])
     LegoMotorDirectControl(&LegoMotor,1,0);
     LegoMotorDirectControl(&LegoMotor,2,0);
 
-    system ("espeak -ven+f2 -k5 -a50 -s150 \"Let's get ready to rumble Robin, are you ready?.\" --stdout | aplay");
+    //system ("espeak -ven+f2 -k5 -a50 -s150 \"Let's get ready to rumble Robin, are you ready?.\" --stdout | aplay");
 
     //==============================
     // Read QR code
