@@ -76,6 +76,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="qrcode.h" />
+		<Unit filename="rfcomms.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="rfcomms.h" />
 		<Unit filename="robotapp.c">
 			<Option compilerVar="CC" />
 		</Unit>

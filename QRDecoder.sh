@@ -67,7 +67,7 @@ $debug&& echo -e "${BG}[$(date | cut -c 12-19)]${NC} Raspistill saving ${ORANGE}
 #Raspistill: vertical and horizontal flip: (-vf, -hf) in output (-o) file (QR.jpg), saved on RAM, accessible at /io 
 #-w -h : width and height; lowest 640x480; should hopefully be faster at lower quality shots. -q 10: quality (0-100). 100: uncompressed. 10 should deliver lower quality.
 raspistill -o /mnt/ramdisk/QR.jpg >> /mnt/ramdisk/raspistill.dat
-
+wait
 
 #print QR-code data (-q parameter suppresses other output) 
 #zbarimg -q /mnt/ramdisk/QR.jpg > /mnt/ramdisk/QRTemp
@@ -75,6 +75,7 @@ raspistill -o /mnt/ramdisk/QR.jpg >> /mnt/ramdisk/raspistill.dat
 #echo $QRData >> /mnt/ramdisk/QR.dat
 zbarimg -q /mnt/ramdisk/QR.jpg >> /mnt/ramdisk/QR.dat
 #add an additional space to QR.dat in order to make sure we have at least 3 lines in QR.dat (redundancy for follow-up sed commands)
+wait
 echo $'\n' >> /mnt/ramdisk/QR.dat
 
 

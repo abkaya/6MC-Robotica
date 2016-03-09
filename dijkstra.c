@@ -9,57 +9,10 @@
 #include "dijkstra.h"
 #define debug
 
-int main()
-{
-    Start=5;
-    Finish=9;
-    //Create an array of nodes describing the map
-    //NodeStruct* Nodes = malloc(MapSize * sizeof(NodeStruct));
-    NodeStruct Nodes[MapSize];
-    //Populate the members Neighbours[] and Distance[] in these nodes.
-#ifdef debug
-    printf("Running ReadNodes\n");
-#endif
-    ReadNodes(Nodes,MapSize);
-
-    //Display Graph
-#ifdef debug
-    for(i=0; i<MapSize; i++)
-    {
-        for(k=0; k<4; k++)
-        {
-            printf("%d\t", Nodes[i].Neighbours[k]);
-        }
-        for(k=0; k<4; k++)
-        {
-            printf("%d\t", Nodes[i].Distance[k]);
-            if(k==3)
-                printf("\n");
-        }
-    }
-
-    printf("\nRunning Dijkstra\n");
-#endif
-    Dijkstra(Nodes,MapSize,Start,Finish);
-
-#ifdef debug
-    printf("\nShortest Path: \n");
-    printf("-> %d ", Start);
-    Current=Start;
-    while(Nodes[Current].Next!=-1)
-    {
-        printf("-> %d ", Nodes[Current].Next);
-        Current=Nodes[Current].Next;
-    }
-#endif
-    return 0;
-}
-
-
-
 //Set Initial DV, Visited and Previous values for all nodes.
 int Dijkstra(NodeStruct *Nodes, int MapSize, int Start, int Finish)
 {
+    //Set the current node to visit to Start
     Current=Start;
 #ifdef debug
     printf("Init dijkstra\n");
@@ -109,15 +62,12 @@ int Dijkstra(NodeStruct *Nodes, int MapSize, int Start, int Finish)
 
         //the current node's neighbours have all been assigned a distance value. Time to mark it as visited and move onto the next "Current" node.
         Nodes[Current].Visited=1;
-        //The neighbours of this current node are marked for visitation. Now let's sort, in order to visit the lowest DV with the lowest indexes first
 
+        //The neighbours of this current node are marked for visitation. Now let's sort, in order to visit the lowest DV nodes with the lowest indexes first
+        //Imagine an expanding spiderweb, but without the sequential build up
         Current=SortQueue(Nodes,toVisit);
-        //Because the toVisit array/queue is now sorted, we're confident that toVisit[i] is the next appropriate "current node"
 
-        // if(*(toVisit+i)!=-1)
-        //   Current=*(toVisit+i);
-
-        //repeat the loop until all nodes have been visited. By this algorithm's nature, MapSize is the number of iterations needed to visit each node
+        //repeat the loop MapSize times in order to visit every node. Each iteration will mark exactly 1 node as visited.
     }
 
 

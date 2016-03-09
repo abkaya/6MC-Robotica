@@ -1,7 +1,7 @@
 #ifndef QRCODE_H
 #define QRCODE_H
 
-#include "robotapp.h"
+//#include "robotapp.h"
 
 /**
  * \brief Take still picture with raspberry PI camera, decode with zbar tool
@@ -14,6 +14,8 @@
  * 3:Other error \n
 */
 int QRCodeDecode(char* Data,int MaxDataLen);
+
+int getCurrentTime();
 
 
 #endif

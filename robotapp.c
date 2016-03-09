@@ -26,13 +26,13 @@ void RobotApp(int argc, char *argv[])
     //==============================
     // Initialization
     //==============================
-    char* qr_data[maxContentLength];    // create QR data holder
-    char* tag_data[maxContentLength];   // create tag data holder
+    char qr_data[maxContentLength];    // create QR data holder
+    char tag_data[maxContentLength];   // create tag data holder
     int i;                              // holds counter value
     int res;                            // hold return status values
     LegoMotorSetup(&LegoMotor,1,0,0);   // motor, channel, brake, mode
     LegoMotorSetup(&LegoMotor,2,0,0);
-    system("./mkRamdisk.sh");
+    system("./mkRamdisk.sh");           // checks on whether or not the /mnt/ramdisk directory exist and a ramdisk has been made -- script reports back on screen
     #ifdef DEBUG_ABORT
         printf ("Initialisation complete\n");
         //system ("espeak -ven+f2 -k5 -a50 -s150 \"Initialasition complete\" --stdout | aplay");
@@ -42,18 +42,17 @@ void RobotApp(int argc, char *argv[])
     // Test Procedures
     //==============================
     #ifdef testQR     // Try to scan a QR-code every 5 seconds
-        while (1) {
-            system ("espeak -ven+f2 -k5 -a50 -s150 \"Testing QR code scanning\" --stdout | aplay");
-            res = QRCodeDecode(*qr_data, maxContentLength);   // scan for QR code
-            printf("QR status: %i   data: %s\n",res,*qr_data);                      // print status
-            _delay_ms(5000);                                  // wait 5 seconds
-        }
+
+            //system ("espeak -ven+f2 -k5 -a50 -s150 \"QR\" --stdout | aplay");
+            res = QRCodeDecode(qr_data, maxContentLength);   // scan for QR code
+            printf("QR status: %i   data: %s\n",res,qr_data);                      // print status
+
     #endif
     #ifdef testTag     // Try to scan a QR-code every 5 seconds
         while (1) {
             //system ("espeak -ven+f2 -k5 -a50 -s150 \"Testing Tag scanning\" --stdout | aplay");
-            res = TagReaderGetUID( &tag_data );                         // scan tag
-            printf("tag status: %i   tag data: %s\n",res,*tag_data);       // print status
+            res = TagReaderGetUID( tag_data );                         // scan tag
+            printf("tag status: %i   tag data: %s\n",res,tag_data);       // print status
             _delay_ms(5000);                                            // wait 5 seconds
         }
     #endif
@@ -130,12 +129,12 @@ void RobotApp(int argc, char *argv[])
     // Read QR code
     //==============================
     //char* qr_data[maxContentLength];
-    res = QRCodeDecode(*qr_data, maxContentLength);   // Scan for QR code
+    res = QRCodeDecode(qr_data, maxContentLength);   // Scan for QR code
     switch(res) {
       case 0 :   // OK
         // code
         #ifdef DEBUG_ABORT
-          printf ("QR code = %s\n",*qr_data);  // log to console
+          printf ("QR code = %s\n",qr_data);  // log to console
         #endif
         break;
       case 1 :   // camera error
