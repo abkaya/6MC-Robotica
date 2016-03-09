@@ -6,6 +6,7 @@
 //========================================
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #define DEBUG_ABORT
 
@@ -16,6 +17,7 @@ int TagReaderGetUID(char *Data) {
     //==============================
     FILE *fp;        // create file object
     int status;      // status value
+    int tag_node;
 
     //==============================
     // Scan Tag
@@ -28,6 +30,23 @@ int TagReaderGetUID(char *Data) {
     fgets(Data, 15, fp);
     printf("Data: %s\n", Data);
     status = pclose(fp);
+
+    if(strcmp(Data,"0447E422A93480")==0)
+        tag_node=3;
+    else if(strcmp(Data,"04ECD612A93480")==0)
+        tag_node=4;
+    else if(strcmp(Data,"04631322A93484")==0)
+        tag_node=5;
+    else if(strcmp(Data,"0488FE22A93480")==0)
+        tag_node=7;
+    else if(strcmp(Data,"0424E622A93480")==0)
+        tag_node=9;
+    else if(strcmp(Data,"04D00412A93484")==0)
+        tag_node=11;
+    else
+        tag_node=-1;
+
+
 
     //==============================
     // Catch pclose error
@@ -45,6 +64,6 @@ int TagReaderGetUID(char *Data) {
 
 
 
-    return 0;
+    return tag_node;
 
 }

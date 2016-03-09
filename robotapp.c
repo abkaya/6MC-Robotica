@@ -9,7 +9,7 @@
 #include "robotapp.h"
 #include "qrcode.h"
 #include "tagreader.h"
-//#include "dijkstra.h"
+#include "dijkstra.h"
 #include "rfcomms.h"
 
 #define maxContentLength 32   // max amount of chars in content
@@ -17,7 +17,7 @@
 #define DEBUG_ABORT
 //#define testQR
 #define testTag
-//#define testDijkstra
+#define testDijkstra
 //#define testCC1101send
 //#define testCC1101receive
 
@@ -49,14 +49,34 @@ void RobotApp(int argc, char *argv[])
 
     #endif
     #ifdef testTag     // Try to scan a QR-code every 5 seconds
-        while (1) {
+        for(i=0;i<3;i++){
             //system ("espeak -ven+f2 -k5 -a50 -s150 \"Testing Tag scanning\" --stdout | aplay");
             res = TagReaderGetUID( tag_data );                         // scan tag
-            printf("tag status: %i   tag data: %s\n",res,tag_data);       // print status
-            _delay_ms(5000);                                            // wait 5 seconds
-        }
+            printf("tag node: %i   tag data: %s\n",res,tag_data);       // print status
+
+            _delay_ms(5000);
+        }                                           // wait 5 seconds
+
     #endif
-    #ifdef testDijkstr     // Test dijkstra algorithm
+    #ifdef testDijkstra     // Test dijkstra algorithm
+    Start=res;
+    Finish=9;
+    //Create an array of nodes describing the map
+    //NodeStruct* Nodes = malloc(MapSize * sizeof(NodeStruct));
+    NodeStruct Nodes[MapSize];
+    //Populate the members Neighbours[] and Distance[] in these nodes.
+    ReadNodes(Nodes,MapSize);
+
+    Dijkstra(Nodes,MapSize,Start,Finish);
+    printf("\nShortest Path: \n");
+    printf("-> %d ", Start);
+    int Current=Start;
+    while(Nodes[Current].Next!=-1)
+    {
+        printf("-> %d ", Nodes[Current].Next);
+        Current=Nodes[Current].Next;
+    }
+
 
     #endif
     #ifdef testCC1101send     // Send data package every 5 seconds
