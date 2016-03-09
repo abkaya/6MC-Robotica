@@ -15,8 +15,8 @@
 #define maxContentLength 32   // max amount of chars in content
 
 #define DEBUG_ABORT
-#define testQR
-//#define testTag
+//#define testQR
+#define testTag
 //#define testDijkstra
 //#define testCC1101send
 //#define testCC1101receive

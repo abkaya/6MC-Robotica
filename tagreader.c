@@ -30,7 +30,7 @@ int TagReaderGetUID(char *Data) {
         printf("line: %s",line);
         Data = line;
     }
-    printf("Data: %s",Data);
+    printf("Data: %s", Data);
     status = pclose(fp);
 
     //==============================
