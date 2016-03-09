@@ -16,10 +16,10 @@
  * 1:Error \n
 */
 int RfCommsInit(void) {
-    int status = RfCC1101Init( &RfCC1101 );
+    int status = RfCC1101Init( &RfCC1101 ); // send settings to init function
     // status return
-    if (status == 0) return 0;
-    else return 1;
+    if (status == 0) return 0;              // if status is 0 return 'ok'
+    else return 1;                          // if status is 'other' return 'error'
 }
 
 /**
@@ -30,9 +30,9 @@ int RfCommsInit(void) {
  * 1:Error \n
 */
 int RfCommsSendPacket(RfCommsPacket *Packet) {
-    int i;
-    uint8 Data[RFCOMMS_MAX_DATA_LEN];
-    for(i=0;i<RFCOMMS_MAX_DATA_LEN;i++) {       // because "Data = Packet->Data;" doesnt work
+    int i;                                      // initialize variable for loop counters
+    uint8 Data[RFCOMMS_MAX_DATA_LEN];           // initialize array to hold data
+    for(i=0;i<RFCOMMS_MAX_DATA_LEN;i++) {       // copy array value by value because "Data = Packet->Data;" doesnt work
         Data[i] = Packet->Data[i];
     }
 
@@ -41,14 +41,14 @@ int RfCommsSendPacket(RfCommsPacket *Packet) {
     //==============================
     #ifdef DEBUG_ABORT
     printf("Send data before stuffin: ");
-    for(i=0;i<RFCOMMS_MAX_DATA_LEN;i++) {
+    for(i=0;i<RFCOMMS_MAX_DATA_LEN;i++) {       // print data to send before bytestuffing
         printf("%i ",Data[i]);
     }
     printf ("\n");
     #endif
 
     //==============================
-    // Bitstuffing
+    // Bytestuffing
     //==============================
     //------------------------------
     // Shift Right
@@ -60,15 +60,15 @@ int RfCommsSendPacket(RfCommsPacket *Packet) {
     //------------------------------
     // Stuff
     //------------------------------
-    for(i=0;i<(Packet->DataLen+1);i++) {
-        if ( Data[i] == 0 ) {
-            int j = i,replacement=0;
+    for(i=0;i<(Packet->DataLen+1);i++) {                            // iterate all fields
+        if ( Data[i] == 0 ) {                                       // if field == 0
+            int j = i,replacement=0;                                // initialze variables
             do {
-                j++;
-                replacement++;
-            } while ( Data[j] != 0 && j < (Packet->DataLen+1) );
-            Data[i] = replacement;
-            i = j-1;
+                j++;                                                // remember place of next zero's
+                replacement++;                                      // count places between zero's
+            } while ( Data[j] != 0 && j < (Packet->DataLen+1) );    // while ( (data != 0) or !(end of data) )
+            Data[i] = replacement;                                  // replace zero by (places till next zero)
+            i = j-1;                                                // jump directly to next zero
         }
     }
 
@@ -77,7 +77,7 @@ int RfCommsSendPacket(RfCommsPacket *Packet) {
     //==============================
     #ifdef DEBUG_ABORT
     printf("Send data after stuffin: ");
-    for(i=0;i<RFCOMMS_MAX_DATA_LEN;i++) {
+    for(i=0;i<RFCOMMS_MAX_DATA_LEN;i++) {       // print data to send after bytestuffing
         printf("%i ",Data[i]);
     }
     printf ("\n");
@@ -87,8 +87,8 @@ int RfCommsSendPacket(RfCommsPacket *Packet) {
     //==============================
     int status = RfCC1101FIFOSendData( &RfCC1101, Packet->Data, Packet->DstRfAddr );
     // status return
-    if (status == 0) return 0;
-    else return 1;
+    if (status == 0) return 0;              // if status is 0 return 'ok'
+    else return 1;                          // if status is 'other' return 'error'
 }
 
 /**
@@ -103,14 +103,14 @@ int RfCommsReceivePacket(RfCommsPacket *Packet) {
     //==============================
     // Receive Data
     //==============================
-    int status = RfCC1101FIFOReceiveData( &RfCC1101, Packet->Data, &Packet->Rssi, &Packet->Lqi );
+    int status = RfCC1101FIFOReceiveData( &RfCC1101, Packet->Data, &Packet->Rssi, &Packet->Lqi );   // receive data
 
     //==============================
     // Log
     //==============================
     #ifdef DEBUG_ABORT
     printf("Received data before destuffin: ");
-    for(i=0;i<RFCOMMS_MAX_DATA_LEN;i++) {
+    for(i=0;i<RFCOMMS_MAX_DATA_LEN;i++) {           // print received bytestuffed data
         printf("%i ",Packet->Data[i]);
     }
     printf ("\n");
@@ -125,10 +125,10 @@ int RfCommsReceivePacket(RfCommsPacket *Packet) {
     int index = 0;
     int distance = 0;
     do {
-        distance = Packet->Data[index];
-        Packet->Data[index] = 0;
-        index += distance;
-    } while (index<RFCOMMS_MAX_DATA_LEN && Packet->Data[index] != 0);
+        distance = Packet->Data[index];     // data of value holds places till next zero
+        Packet->Data[index] = 0;            // replace by 0 again
+        index += distance;                  // next index = current index + value of next zero
+    } while (index<RFCOMMS_MAX_DATA_LEN && Packet->Data[index] != 0);   // do as long as not 0 (end of stream delimiter) or MAX length reached
     //------------------------------
     // Shift Left
     //------------------------------
@@ -143,15 +143,15 @@ int RfCommsReceivePacket(RfCommsPacket *Packet) {
     //==============================
     #ifdef DEBUG_ABORT
     printf("Received data after destuffin: ");
-    for(i=0;i<RFCOMMS_MAX_DATA_LEN;i++) {
+    for(i=0;i<RFCOMMS_MAX_DATA_LEN;i++) {       // print received dat without bytestuffing
         printf("%i ",Packet->Data[i]);
     }
     printf ("\n");
     #endif
 
     // status return
-    if (status == 0) return 0;
-    else return 1;
+    if (status == 0) return 0;              // if status is 0 return 'ok'
+    else return 1;                          // if status is 'other' return 'error'
 }
 
 
@@ -163,8 +163,8 @@ int RfCommsReceivePacket(RfCommsPacket *Packet) {
  * 1:Error \n
 */
 int RfCommsReceivePoll(uint8 *PollStatus) {
-    int status = RfCC1101FIFOReceivePoll( &RfCC1101, PollStatus );
+    int status = RfCC1101FIFOReceivePoll( &RfCC1101, PollStatus );  // check if data is available in receive buffer
     // status return
-    if (status == 0) return 0;
-    else return 1;
+    if (status == 0) return 0;              // if status is 0 return 'ok'
+    else return 1;                          // if status is 'other' return 'error'
 }
