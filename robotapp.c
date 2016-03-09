@@ -15,8 +15,8 @@
 #define maxContentLength 32   // max amount of chars in content
 
 #define DEBUG_ABORT
-//#define testQR
-#define testTag
+#define testQR
+//#define testTag
 //#define testDijkstra
 //#define testCC1101send
 //#define testCC1101receive
@@ -32,6 +32,7 @@ void RobotApp(int argc, char *argv[])
     int res;                            // hold return status values
     LegoMotorSetup(&LegoMotor,1,0,0);   // motor, channel, brake, mode
     LegoMotorSetup(&LegoMotor,2,0,0);
+    system("./mkRamdisk.sh");
     #ifdef DEBUG_ABORT
         printf ("Initialisation complete\n");
         //system ("espeak -ven+f2 -k5 -a50 -s150 \"Initialasition complete\" --stdout | aplay");
@@ -44,15 +45,15 @@ void RobotApp(int argc, char *argv[])
         while (1) {
             system ("espeak -ven+f2 -k5 -a50 -s150 \"Testing QR code scanning\" --stdout | aplay");
             res = QRCodeDecode(*qr_data, maxContentLength);   // scan for QR code
-            printf("QR status: %i\n",res);                      // print status
+            printf("QR status: %i   data: %s\n",res,*qr_data);                      // print status
             _delay_ms(5000);                                  // wait 5 seconds
         }
     #endif
     #ifdef testTag     // Try to scan a QR-code every 5 seconds
         while (1) {
             //system ("espeak -ven+f2 -k5 -a50 -s150 \"Testing Tag scanning\" --stdout | aplay");
-            res = TagReaderGetUID( *tag_data );                         // scan tag
-            printf("tag status: %d   tag data: %s\n",res,*tag_data);       // print status
+            res = TagReaderGetUID( &tag_data );                         // scan tag
+            printf("tag status: %i   tag data: %s\n",res,*tag_data);       // print status
             _delay_ms(5000);                                            // wait 5 seconds
         }
     #endif
