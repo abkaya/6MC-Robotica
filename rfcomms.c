@@ -44,7 +44,7 @@ int RfCommsSendPacket(RfCommsPacket *Packet) {
     for(i=0;i<RFCOMMS_MAX_DATA_LEN;i++) {       // print data to send before bytestuffing
         printf("%i ",Data[i]);
     }
-    printf ("\n");
+    printf ("\n\n");
     #endif
 
     //==============================
@@ -80,7 +80,7 @@ int RfCommsSendPacket(RfCommsPacket *Packet) {
     for(i=0;i<RFCOMMS_MAX_DATA_LEN;i++) {       // print data to send after bytestuffing
         printf("%i ",Data[i]);
     }
-    printf ("\n");
+    printf ("\n\n");
     #endif
     //==============================
     // Send Data
@@ -113,7 +113,7 @@ int RfCommsReceivePacket(RfCommsPacket *Packet) {
     for(i=0;i<RFCOMMS_MAX_DATA_LEN;i++) {           // print received bytestuffed data
         printf("%i ",Packet->Data[i]);
     }
-    printf ("\n");
+    printf ("\n\n");
     #endif
 
     //==============================
@@ -146,7 +146,7 @@ int RfCommsReceivePacket(RfCommsPacket *Packet) {
     for(i=0;i<RFCOMMS_MAX_DATA_LEN;i++) {       // print received dat without bytestuffing
         printf("%i ",Packet->Data[i]);
     }
-    printf ("\n");
+    printf ("\n\n");
     #endif
 
     // status return

@@ -79,7 +79,7 @@ void RobotApp(int argc, char *argv[])
     #endif
     #ifdef testCC1101send     // Send data package every 5 seconds
         while (1) {
-            system ("espeak -ven+f2 -k5 -a50 -s150 \"Testing sending wireless communication\" --stdout | aplay");
+            //system ("espeak -ven+f2 -k5 -a50 -s150 \"Testing sending wireless communication\" --stdout | aplay");
 
             RfCommsPacket package;      // create package
             package.DstRfAddr = 5;      // destination RF address
@@ -91,13 +91,13 @@ void RobotApp(int argc, char *argv[])
             package.Data[3] = 7;        // set data (1337)
 
             res = RfCommsSendPacket( &package );   // Send data
-            printf("send status: %i",res);                      // print status
+            printf("send status: %i\n",res);                      // print status
             _delay_ms(5000);
         }
     #endif
         #ifdef testCC1101receive     // Receive data package every 2 seconds
         while (1) {
-            system ("espeak -ven+f2 -k5 -a50 -s150 \"Testing receiving wireless communication\" --stdout | aplay");
+            //system ("espeak -ven+f2 -k5 -a50 -s150 \"Testing receiving wireless communication\" --stdout | aplay");
             RfCommsPacket package;                          // create package
             uint8 PollStatus;
             res = RfCommsReceivePoll( &PollStatus );        // check for available data
