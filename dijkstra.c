@@ -9,11 +9,15 @@
 #include "dijkstra.h"
 #define debug
 
+char Graph[]="Graph.dat";
+int LowestDV=999;
+
 //Set Initial DV, Visited and Previous values for all nodes.
-int Dijkstra(NodeStruct *Nodes, int Start, int Finish)
+int Dijkstra(NodeStruct *Nodes, int MapSize_, int Start, int Finish)
 {
-
-
+    //Populate the members Neighbours[] and Distance[] in these nodes.
+    ReadNodes(Nodes,MapSize);
+    MapSize=MapSize_;
     //Set the current node to visit to Start
     Current=Start;
 #ifdef debug

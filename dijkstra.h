@@ -32,17 +32,15 @@ int k,n,i,j;
 int PathLength, Node;
 
 //Number of nodes in the Graph
-int toVisit[11];
+int toVisit[12];
 
 //to be used for dynamic allocation of an integer array to store the dijkstra path's  indexes
 int *Path[10];
 
-int MapSize=11;
-char Graph[10]="Graph.dat";
-int LowestDV=999;
-
 //used to read the Graph.dat
 FILE * fp;
+
+int MapSize;
 
 
 /**
@@ -54,7 +52,7 @@ FILE * fp;
  * \return
  * Path length expressed in number of nodes (not including start node)
 */
-int Dijkstra(NodeStruct *Nodes,int Start,int Finish);
+int Dijkstra(NodeStruct *Nodes, int MapSize, int Start,int Finish);
 
 /**
  * \brief Read Graph/Nodes and their Members' values from a data file
