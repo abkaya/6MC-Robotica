@@ -2,7 +2,6 @@
 //
 //  Robotics Lab Project
 //  Written by Abdil Kaya & Robin Janssens
-//  Commissioned by University of Antwerp
 //
 //========================================
 
