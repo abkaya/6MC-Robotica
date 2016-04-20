@@ -17,7 +17,7 @@
 //#define testQR
 //#define testTag
 //#define testDijkstra
-#define testCC1101send
+//#define testCC1101send
 #define testCC1101receive
 //#define program
 
@@ -107,13 +107,13 @@ void RobotApp(int argc, char *argv[])
 #ifdef testCC1101receive     // Receive data package every 2 seconds
     RfCC1101.RFAddr = 2;            // receive as robot 2
     res = RfCommsInit();        // check for available data
-    printf("init status: %i",res);               // print status
+    printf("init status: %i\n",res);               // print status
     while (1) {
         //system ("espeak -ven+f2 -k5 -a50 -s150 \"Testing receiving wireless communication\" --stdout | aplay");
         RfCommsPacket package;                          // create package
         uint8 PollStatus;
         res = RfCommsReceivePoll( &PollStatus );        // check for available data
-        printf("receive status: %i",res);               // print status
+        printf("receive status: %i\n",res);               // print status
 
         if ( PollStatus == 1 ) {                        // packet ready
             res = RfCommsReceivePacket( &package );     // receive data
