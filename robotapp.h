@@ -19,7 +19,7 @@
 #include "lin-delay.h"
 #include "TimeSupport.h"
 #include <stdlib.h>
-
+#include <stdio.h>
 
 #define RS485_LEGO_MOTOR_ADDR 1
 #define RS485_LEGO_SENSOR_ADDR 2
