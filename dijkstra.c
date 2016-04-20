@@ -10,14 +10,8 @@
 #define debug
 
 //Set Initial DV, Visited and Previous values for all nodes.
-int Dijkstra(NodeStruct *Nodes, int MapSize, int Start, int Finish)
+int Dijkstra(NodeStruct *Nodes, int Start, int Finish)
 {
-
-//Taken from header to avoid multiple definition of .. .. ..
-MapSize=11;
-Graph[10]="Graph.dat";
-LowestDV=999;
-//
 
 
     //Set the current node to visit to Start
@@ -132,6 +126,7 @@ void ReadNodes(NodeStruct *Nodes, int MapSize)
 //Set Initial DV, Visited, Previous and Next values for all nodes.
 void InitDijkstra(NodeStruct *Nodes, int MapSize, int Start)
 {
+
     int j;
     //Initial member values of NodeStruct
     for(j=0; j<MapSize; j++)

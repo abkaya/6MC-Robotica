@@ -67,7 +67,7 @@ void RobotApp(int argc, char *argv[])
         //Populate the members Neighbours[] and Distance[] in these nodes.
         ReadNodes(Nodes,MapSize);
 
-        Dijkstra(Nodes,MapSize,Start,Finish);
+        Dijkstra(Nodes,Start,Finish);
         printf("\nShortest Path: \n");
         printf("-> %d ", Start);
         int Current=Start;
