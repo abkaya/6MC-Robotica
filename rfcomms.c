@@ -85,7 +85,7 @@ int RfCommsSendPacket(RfCommsPacket *Packet) {
     //==============================
     // Send Data
     //==============================
-    int status = RfCC1101FIFOSendData( &RfCC1101, Packet->Data, Packet->DstRfAddr );
+    int status = RfCC1101FIFOSendData( &RfCC1101, Data, Packet->DstRfAddr );
     // status return
     if (status == 0) return 0;              // if status is 0 return 'ok'
     else return 1;                          // if status is 'other' return 'error'
@@ -165,6 +165,6 @@ int RfCommsReceivePacket(RfCommsPacket *Packet) {
 int RfCommsReceivePoll(uint8 *PollStatus) {
     int status = RfCC1101FIFOReceivePoll( &RfCC1101, PollStatus );  // check if data is available in receive buffer
     // status return
-    if (status == 0) return 0;              // if status is 0 return 'ok'
+    if (status == 0 || status == 1) return 0;              // if status is 0 return 'ok'
     else return 1;                          // if status is 'other' return 'error'
 }

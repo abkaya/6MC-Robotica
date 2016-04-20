@@ -8,7 +8,7 @@
 #include "robotapp.h"
 #include "qrcode.h"
 #include "tagreader.h"
-#include "dijkstra.h"
+//#include "dijkstra.h"
 #include "rfcomms.h"
 
 #define maxContentLength 32   // max amount of chars in content
@@ -16,8 +16,8 @@
 #define DEBUG_ABORT
 //#define testQR
 //#define testTag
-#define testDijkstra
-//#define testCC1101send
+//#define testDijkstra
+#define testCC1101send
 //#define testCC1101receive
 //#define program
 
@@ -81,7 +81,7 @@ void RobotApp(int argc, char *argv[])
             //system ("espeak -ven+f2 -k5 -a50 -s150 \"Testing sending wireless communication\" --stdout | aplay");
 
             RfCommsPacket package;      // create package
-            package.DstRfAddr = 5;      // destination RF address
+            package.DstRfAddr = 2;      // destination RF address
             package.SrcRfAddr = 7;      // source RF address
             package.DataLen = 4;        // number of data bytes in packet (Data array)
             package.Data[0] = 1;        // set data (1337)
