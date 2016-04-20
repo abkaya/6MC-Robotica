@@ -13,7 +13,7 @@ LFLAGS += -lpthread -L$(ML) -lrt
 OBJECTS=main.o robotapp.o qrcode.o tagreader.o dijkstra.o rfcomms.o $(ML_ROB)timestep.o $(ML_ROB)TimeSupport.o $(ML)lin-rpi-serlib.o $(ML)lin-rs485client.o $(ML)crc.o $(ML)rf-cc1101.o $(ML)lego-motor.o $(ML)lego-sensor.o $(ML)lin-delay.o $(ML)lin-gpio.o $(ML)lin-lego-motor-log.o $(ML)pwr-liion1a.o $(ML)ansi.o $(ML)imu.o
 #include shell scripts
 SHELLSCRIPTS= QRDecoder.sh tagreader.sh mkRamdisk.sh cleanup.sh
-DATAFILES= APDU.dat
+DATAFILES= APDU.dat Graph.dat
 
 all: kennismaking
 Debug: kennismaking
