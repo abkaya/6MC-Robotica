@@ -18,7 +18,7 @@
 //#define testTag
 //#define testDijkstra
 #define testCC1101send
-//#define testCC1101receive
+#define testCC1101receive
 //#define program
 
 int MapSize=12;
@@ -105,7 +105,7 @@ void RobotApp(int argc, char *argv[])
     }
 #endif
 #ifdef testCC1101receive     // Receive data package every 2 seconds
-    RfCC1101.
+    RfCC1101.RFAddr = 2;            // receive as robot 2
     res = RfCommsInit();        // check for available data
     printf("init status: %i",res);               // print status
     while (1) {
