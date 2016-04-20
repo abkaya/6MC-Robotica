@@ -32,7 +32,7 @@ int k,n,i,j;
 int PathLength, Node;
 
 //Number of nodes in the Graph
-int toVisit[11];
+int toVisit[12];
 
 //to be used for dynamic allocation of an integer array to store the dijkstra path's  indexes
 int *Path[10];

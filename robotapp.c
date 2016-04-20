@@ -21,7 +21,7 @@
 //#define testCC1101receive
 //#define program
 
-int MapSize=11;
+int MapSize=12;
 
 void RobotApp(int argc, char *argv[])
 {
@@ -61,14 +61,24 @@ void RobotApp(int argc, char *argv[])
     }                                           // wait 5 seconds
 #endif
 #ifdef testDijkstra     // Test dijkstra algorithm
-    Start=0;
-    Finish=9;
+    Start=2;
+    Finish=10;
+    int PathLength;
+    int CurrentNode=Start;
     //Create an array of nodes describing the map
     //NodeStruct* Nodes = malloc(MapSize * sizeof(NodeStruct));
     NodeStruct Nodes[MapSize];
-    Dijkstra(Nodes,MapSize,Start,Finish);
+    PathLength=Dijkstra(Nodes,MapSize,Start,Finish);
     printf("\nShortest Path: \n");
     printf("-> %d ", Start);
+
+    for(i=0;i<PathLength;i++){
+        printf("NRD: %d ",Nodes[CurrentNode].NextRelDir);
+        printf("\n");
+
+        CurrentNode=Nodes[CurrentNode].Next;
+    }
+
     int Current=Start;
     while(Nodes[Current].Next!=-1)
     {
