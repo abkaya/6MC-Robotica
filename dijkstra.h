@@ -34,13 +34,12 @@ int PathLength, Node;
 //Number of nodes in the Graph
 int toVisit[11];
 
-int LowestDV=999;
-
 //to be used for dynamic allocation of an integer array to store the dijkstra path's  indexes
 int *Path[10];
 
-const int MapSize=11;
-const char Graph[10]="Graph.dat";
+int MapSize;
+char Graph[10];
+int LowestDV;
 
 //used to read the Graph.dat
 FILE * fp;

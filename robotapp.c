@@ -59,7 +59,7 @@ void RobotApp(int argc, char *argv[])
 
     #endif
     #ifdef testDijkstra     // Test dijkstra algorithm
-    Start=res;
+    Start=0;
     Finish=9;
     //Create an array of nodes describing the map
     //NodeStruct* Nodes = malloc(MapSize * sizeof(NodeStruct));

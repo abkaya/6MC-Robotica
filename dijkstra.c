@@ -12,6 +12,14 @@
 //Set Initial DV, Visited and Previous values for all nodes.
 int Dijkstra(NodeStruct *Nodes, int MapSize, int Start, int Finish)
 {
+
+//Taken from header to avoid multiple definition of .. .. ..
+MapSize=11;
+Graph[10]="Graph.dat";
+LowestDV=999;
+//
+
+
     //Set the current node to visit to Start
     Current=Start;
 #ifdef debug
