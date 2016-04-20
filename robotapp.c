@@ -16,7 +16,7 @@
 
 #define DEBUG_ABORT
 //#define testQR
-#define testTag
+//#define testTag
 #define testDijkstra
 //#define testCC1101send
 //#define testCC1101receive
