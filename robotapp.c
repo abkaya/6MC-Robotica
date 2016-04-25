@@ -19,6 +19,7 @@
 //#define testDijkstra
 //#define testCC1101send
 #define testCC1101receive
+//#define testDrive
 //#define program
 
 int MapSize=12;
@@ -128,6 +129,15 @@ void RobotApp(int argc, char *argv[])
             _delay_ms(2000);                            // wait 2 seconds
         }
     }
+#endif
+#ifdef testDrive
+    DriveInit();
+    DriveStraightDistance(200, 200);
+    DriveRotateRWheel(180, 50);
+    DriveRotateLWheel(360, 100);
+    DriveRotateCenter(180, 50);
+    DriveLineFollowDistance(2500,100);
+    DriveLineFollow(100);
 #endif
 #ifdef program
 
