@@ -10,6 +10,7 @@
 #include "tagreader.h"
 //#include "dijkstra.h"
 #include "rfcomms.h"
+#include "drive.h"
 
 #define maxContentLength 32   // max amount of chars in content
 
@@ -165,7 +166,6 @@ void RobotApp(int argc, char *argv[])
     LegoMotorDirectControl(&LegoMotor,1,0);
     LegoMotorDirectControl(&LegoMotor,2,0);
 
-    //system ("espeak -ven+f2 -k5 -a50 -s150 \"Let's get ready to rumble Robin, are you ready?.\" --stdout | aplay");
 
     //==============================
     // Read QR code

@@ -32,7 +32,6 @@ kennismaking: $(OBJECTS)
 cleanDebug: clean
 clean:
 	rm -f $(OBJECTS)
-	rm -f $(SHELLSCRIPTS)
 	rm -f $(DATAFILES)
 	rm -f $(OBJECTS:.o=.d)
 	rm -f $(APP_BINARY)
