@@ -8,7 +8,7 @@
 #include "robotapp.h"
 #include "qrcode.h"
 #include "tagreader.h"
-//#include "dijkstra.h"
+#include "dijkstra.h"
 #include "rfcomms.h"
 #include "drive.h"
 
@@ -31,9 +31,11 @@ void RobotApp(int argc, char *argv[])
     // Initialization
     //==============================
     char qr_data[maxContentLength];    // create QR data holder
+    int speed,res;
+    speed =70;
     char tag_data[maxContentLength];   // create tag data holder
     int i;                              // holds counter value
-    int res;                            // hold return status values
+    //int readTagNode;                            // hold return status values
     LegoMotorSetup(&LegoMotor,1,0,0);   // motor, channel, brake, mode
     LegoMotorSetup(&LegoMotor,2,0,0);
     system("./mkRamdisk.sh");           // checks on whether or not the /mnt/ramdisk directory exist and a ramdisk has been made -- script reports back on screen
@@ -74,7 +76,8 @@ void RobotApp(int argc, char *argv[])
     printf("\nShortest Path: \n");
     printf("-> %d ", Start);
 
-    for(i=0;i<PathLength;i++){
+    for(i=0; i<PathLength; i++)
+    {
         printf("NRD: %d ",Nodes[CurrentNode].NextRelDir);
         printf("\n");
 
@@ -89,7 +92,8 @@ void RobotApp(int argc, char *argv[])
     }
 #endif
 #ifdef testCC1101send     // Send data package every 5 seconds
-    while (1) {
+    while (1)
+    {
         //system ("espeak -ven+f2 -k5 -a50 -s150 \"Testing sending wireless communication\" --stdout | aplay");
 
         RfCommsPacket package;      // create package
@@ -110,17 +114,20 @@ void RobotApp(int argc, char *argv[])
     RfCC1101.RFAddr = 2;            // receive as robot 2
     res = RfCommsInit();        // check for available data
     printf("init status: %i\n",res);               // print status
-    while (1) {
+    while (1)
+    {
         //system ("espeak -ven+f2 -k5 -a50 -s150 \"Testing receiving wireless communication\" --stdout | aplay");
         RfCommsPacket package;                          // create package
         uint8 PollStatus;
         res = RfCommsReceivePoll( &PollStatus );        // check for available data
         printf("receive status: %i\n",res);               // print status
 
-        if ( PollStatus == 1 ) {                        // packet ready
+        if ( PollStatus == 1 )                          // packet ready
+        {
             res = RfCommsReceivePacket( &package );     // receive data
             printf("Packet received! (Rssi: %i, Lqi: %i) data: ",package.Rssi,package.Lqi);
-            for(i=0;i<package.DataLen;i++) {
+            for(i=0; i<package.DataLen; i++)
+            {
                 printf("%c",package.Data[i]);
             }
             printf("\n");
@@ -132,6 +139,28 @@ void RobotApp(int argc, char *argv[])
     }
 #endif
 #ifdef testDrive
+    int PathLength;
+    int r_CurrentNode;
+    int Start;
+    //Create an array of nodes describing the map
+    //NodeStruct* Nodes = malloc(MapSize * sizeof(NodeStruct));
+    NodeStruct Nodes[MapSize];
+    /*printf("\nShortest Path: \n");
+    printf("-> %d ", Start);
+
+    for(i=0;i<PathLength;i++){
+        printf("NRD: %d ",Nodes[CurrentNode].NextRelDir);
+        printf("\n");
+
+        CurrentNode=Nodes[CurrentNode].Next;
+    }*/
+    /*
+    int Current=Start;
+    while(Nodes[Current].Next!=-1)
+    {
+        printf("-> %d ", Nodes[Current].Next);
+        Current=Nodes[Current].Next;
+    }*/
     DriveInit();
     //DriveStraightDistance(200, 200);
 
@@ -141,8 +170,85 @@ void RobotApp(int argc, char *argv[])
     //DriveRotateLWheel(90, 80);
     //DriveRotateCenter(180, 50);
     //DriveLineFollowDistance(2500,100);
-    DriveLineFollow(100);
-    while(1){};
+    int NextRelDir;
+    Finish=10;
+    DriveLineFollow(speed);
+    r_CurrentNode=-1;
+
+    do
+    {
+        r_CurrentNode=TagReaderGetUID(tag_data);
+        Start=r_CurrentNode;
+        DriveLineFollowDistance(12,-speed);
+    }
+    while(r_CurrentNode==-1);
+
+    printf("THE START NODE: %d\n",Start);
+    r_CurrentNode=Start;
+    PathLength=Dijkstra(Nodes,MapSize,Start,Finish)+1;
+    printf("PREVIOUS NODE: %d\n",Nodes[r_CurrentNode].Previous);
+    NextRelDir=Nodes[r_CurrentNode].NextRelDir;
+    TurnRobot(NextRelDir,speed); //turn robot depending on the relative direction returned by dijkstra
+
+
+    for(i=0; i<PathLength; i++)
+    {
+        do
+        {
+            r_CurrentNode=-1;
+            r_CurrentNode=TagReaderGetUID(tag_data);
+            DriveLineFollowDistance(12,-speed);
+        }
+        while(r_CurrentNode==-1);
+        printf("Node: %d , NOW TURNING TO: %d \n",r_CurrentNode,Nodes[r_CurrentNode].NextRelDir);
+        NextRelDir=Nodes[r_CurrentNode].NextRelDir;
+        TurnRobot(NextRelDir,speed);
+
+    }
+
+    //system ("espeak -ven+f2 -k5 -a50 -s150 \"QR\" --stdout | aplay");
+    res = QRCodeDecode(qr_data, maxContentLength);   // scan for QR code
+    printf("QR status: %i   data: %s\n",res,qr_data);                      // print status
+    DriveRotateCenter(180, speed);
+
+    Finish=8;
+    DriveLineFollow(speed);
+    r_CurrentNode=-1;
+
+    do
+    {
+        r_CurrentNode=TagReaderGetUID(tag_data);
+        Start=r_CurrentNode;
+        DriveLineFollowDistance(10,-speed);
+    }
+    while(r_CurrentNode==-1);
+
+    printf("THE START NODE: %d\n",Start);
+    r_CurrentNode=Start;
+    PathLength=Dijkstra(Nodes,MapSize,Start,Finish)+1;
+    printf("PREVIOUS NODE: %d\n",Nodes[r_CurrentNode].Previous);
+    NextRelDir=Nodes[r_CurrentNode].NextRelDir;
+    TurnRobot(NextRelDir,speed); //turn robot depending on the relative direction returned by dijkstra
+
+
+    for(i=0; i<PathLength; i++)
+    {
+        do
+        {
+            r_CurrentNode=TagReaderGetUID(tag_data);
+            DriveLineFollowDistance(8,-speed);
+        }
+        while(r_CurrentNode==-1);
+        printf("Node: %d , NOW TURNING TO: %d \n",r_CurrentNode,Nodes[r_CurrentNode].NextRelDir);
+        NextRelDir=Nodes[r_CurrentNode].NextRelDir;
+        TurnRobot(NextRelDir,speed);
+
+    }
+
+
+    system("mpg123 mjgdva.mp3");
+
+
 #endif
 #ifdef program
 
@@ -209,4 +315,31 @@ void RobotApp(int argc, char *argv[])
 
     printf ("Ready.\n");
 #endif
+}
+
+void TurnRobot(int RelativeDirection, int speed)
+{
+//Relative direction to next node (-1:no direction, 1=turn left, 2=forward, 3=turn right)
+    switch(RelativeDirection)
+
+    {
+    case 1:
+        DriveRotateLWheel(90, speed);
+        DriveLineFollow(speed);
+        _delay_ms(10);
+        break;
+    case 2:
+        DriveLineFollow(speed);
+        _delay_ms(10);
+        break;
+    case 3:
+        //turn right
+        DriveRotateRWheel(90, speed);
+        DriveLineFollow(speed);
+        _delay_ms(10);
+        break;
+    default :
+        break;
+        //code
+    }
 }

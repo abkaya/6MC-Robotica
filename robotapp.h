@@ -43,5 +43,10 @@ extern ImuStruct Imu;
 
 void RobotApp(int argc, char *argv[]);
 
+/**
+* \brief Rotates the robot depending on the relative direction
+* \param RelativeDirection: returned by the .RelativeDirection method in dijkstra
+*/
+void TurnRobot(int RelativeDirection, int speed);
 
 #endif
