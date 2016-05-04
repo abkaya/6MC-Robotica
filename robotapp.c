@@ -19,8 +19,8 @@
 //#define testTag
 //#define testDijkstra
 //#define testCC1101send
-#define testCC1101receive
-//#define testDrive
+//#define testCC1101receive
+#define testDrive
 //#define program
 
 int MapSize=12;
@@ -133,12 +133,16 @@ void RobotApp(int argc, char *argv[])
 #endif
 #ifdef testDrive
     DriveInit();
-    DriveStraightDistance(200, 200);
-    DriveRotateRWheel(180, 50);
-    DriveRotateLWheel(360, 100);
-    DriveRotateCenter(180, 50);
-    DriveLineFollowDistance(2500,100);
+    //DriveStraightDistance(200, 200);
+
+    //turn left (yes, it doesn't quite fit the header description)
+    //DriveRotateRWheel(90, 80);
+    //turn right
+    //DriveRotateLWheel(90, 80);
+    //DriveRotateCenter(180, 50);
+    //DriveLineFollowDistance(2500,100);
     DriveLineFollow(100);
+    while(1){};
 #endif
 #ifdef program
 
