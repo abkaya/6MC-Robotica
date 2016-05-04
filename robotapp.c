@@ -55,7 +55,7 @@ void RobotApp(int argc, char *argv[])
     {
         //system ("espeak -ven+f2 -k5 -a50 -s150 \"Testing Tag scanning\" --stdout | aplay");
         res = TagReaderGetUID( tag_data );                         // scan tag
-        printf("tag node: %i   tag data: %s\n",res,tag_data);       // print status
+        printf("tag node: %i   tag data: %s\n",res,tag_data);       // print statusl
 
         _delay_ms(5000);
     }                                           // wait 5 seconds
