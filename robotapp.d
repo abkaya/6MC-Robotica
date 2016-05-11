@@ -18,5 +18,5 @@ robotapp.o: robotapp.c robotapp.h project.h \
  /home/lubuntu/minimod/Libs/pwr-liion1aRegs.h \
  /home/lubuntu/minimod/Libs/lin-delay.h \
  /home/lubuntu/robotica/lib/TimeSupport.h \
- /home/lubuntu/minimod/Libs/datatypes.h qrcode.h tagreader.h dijkstra.h \
+ /home/lubuntu/minimod/Libs/datatypes.h dijkstra.h qrcode.h tagreader.h \
  rfcomms.h drive.h

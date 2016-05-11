@@ -4,9 +4,8 @@
 //  Written by Abdil Kaya & Robin Janssens
 //
 //========================================
-
-#ifndef ROBOT_APP
-#define ROBOT_APP
+#ifndef ROBOTAPP_H
+#define ROBOTAPP_H
 
 #include "project.h"
 #include "rs485client.h"
@@ -33,6 +32,13 @@
 
 #define SENSOR_LIFT 3
 
+#include "dijkstra.h"
+#define maxContentLength 32   // max amount of chars in content
+#include "qrcode.h"
+#include "tagreader.h"
+#include "rfcomms.h"
+#include "drive.h"
+
 
 extern RS485ClientStruct RS485Client;
 extern LegoMotorStruct LegoMotor;
@@ -52,6 +58,41 @@ void TurnRobot(int RelativeDirection, int speed);
 /**
 * \brief Used to return the first node depending on the first scanned Tag
 * \param FirstScannedNode is the first scanned node, used to find the stub node.
+* \return Returns the first node (the stub node it left from)
 */
 int AssessStubNode(int FirstScannedNode);
 #endif
+
+/**
+* \brief Moves the robot to the destination. The start position is assumed : Facing FORWARD towards path.
+* \param Finish: Destination node or stub
+*/
+void DriveToDest(int Destination);
+
+
+
+//==============================
+// Initialization
+//==============================
+//MapSize=12;
+char qr_data[maxContentLength];    // create QR data holder
+int res;
+int speed;
+int turnSpeed;
+char tag_data[maxContentLength];   // create tag data holder
+int NextRelDir;
+int i;                              // holds counter value
+
+
+int PathLength;
+int currentNode;
+int Start;
+//Create an array of nodes describing the map
+//NodeStruct* Nodes = malloc(MapSize * sizeof(NodeStruct));
+NodeStruct Nodes[12]; //12 is map size
+
+int PathLength;
+int currentNode;
+int Start;
+//Create an array of nodes describing the map
+//NodeStruct* Nodes = malloc(MapSize * sizeof(NodeStruct));
