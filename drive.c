@@ -1,3 +1,4 @@
+/*
 #include "drive.h"
 
 //writen by Dries Blontrock
@@ -435,3 +436,4 @@ int adaptiveThreshold(int RSensor, int LSensor)
     int threshold = (minimum + maximum)/2;
     return threshold;
 }
+*/

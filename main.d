@@ -18,4 +18,5 @@ main.o: main.c /home/lubuntu/minimod/Libs/lin-delay.h \
  /home/lubuntu/minimod/Libs/pwr-liion1a.h \
  /home/lubuntu/minimod/Libs/pwr-liion1aRegs.h \
  /home/lubuntu/robotica/lib/TimeSupport.h \
- /home/lubuntu/minimod/Libs/datatypes.h /home/lubuntu/minimod/Libs/ansi.h
+ /home/lubuntu/minimod/Libs/datatypes.h dijkstra.h qrcode.h tagreader.h \
+ rfcomms.h drive.h /home/lubuntu/minimod/Libs/ansi.h

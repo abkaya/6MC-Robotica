@@ -18,4 +18,5 @@ rfcomms.o: rfcomms.c rfcomms.h robotapp.h project.h \
  /home/lubuntu/minimod/Libs/pwr-liion1aRegs.h \
  /home/lubuntu/minimod/Libs/lin-delay.h \
  /home/lubuntu/robotica/lib/TimeSupport.h \
- /home/lubuntu/minimod/Libs/datatypes.h
+ /home/lubuntu/minimod/Libs/datatypes.h dijkstra.h qrcode.h tagreader.h \
+ drive.h

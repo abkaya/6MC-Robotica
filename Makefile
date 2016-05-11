@@ -1,6 +1,6 @@
 CC=/home/lubuntu/rpi/tools/arm-bcm2708/arm-bcm2708hardfp-linux-gnueabi/bin/arm-bcm2708hardfp-linux-gnueabi-gcc
 APP_BINARY=kennismaking
-REMOTE_SERVER=pi@robot6
+REMOTE_SERVER=pi@robot7
 REMOTE_PATH=/home/pi
 REMOTE_PASS='raspberry'
 ML=/home/lubuntu/minimod/Libs/
@@ -32,7 +32,6 @@ kennismaking: $(OBJECTS)
 cleanDebug: clean
 clean:
 	rm -f $(OBJECTS)
-	rm -f $(DATAFILES)
 	rm -f $(OBJECTS:.o=.d)
 	rm -f $(APP_BINARY)
 install:

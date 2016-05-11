@@ -6,13 +6,6 @@
 //========================================
 
 #include "robotapp.h"
-#include "qrcode.h"
-#include "tagreader.h"
-//#include "dijkstra.h"
-#include "rfcomms.h"
-#include "drive.h"
-
-#define maxContentLength 32   // max amount of chars in content
 
 #define DEBUG_ABORT
 //#define testQR
@@ -23,17 +16,11 @@
 #define testDrive
 //#define program
 
-int MapSize=12;
+
 
 void RobotApp(int argc, char *argv[])
 {
-    //==============================
-    // Initialization
-    //==============================
-    char qr_data[maxContentLength];    // create QR data holder
-    char tag_data[maxContentLength];   // create tag data holder
-    int i;                              // holds counter value
-    int res;                            // hold return status values
+    //int readTagNode;                            // hold return status values
     LegoMotorSetup(&LegoMotor,1,0,0);   // motor, channel, brake, mode
     LegoMotorSetup(&LegoMotor,2,0,0);
     system("./mkRamdisk.sh");           // checks on whether or not the /mnt/ramdisk directory exist and a ramdisk has been made -- script reports back on screen
@@ -74,7 +61,8 @@ void RobotApp(int argc, char *argv[])
     printf("\nShortest Path: \n");
     printf("-> %d ", Start);
 
-    for(i=0;i<PathLength;i++){
+    for(i=0; i<PathLength; i++)
+    {
         printf("NRD: %d ",Nodes[CurrentNode].NextRelDir);
         printf("\n");
 
@@ -89,7 +77,8 @@ void RobotApp(int argc, char *argv[])
     }
 #endif
 #ifdef testCC1101send     // Send data package every 5 seconds
-    while (1) {
+    while (1)
+    {
         //system ("espeak -ven+f2 -k5 -a50 -s150 \"Testing sending wireless communication\" --stdout | aplay");
 
         RfCommsPacket package;      // create package
@@ -110,17 +99,20 @@ void RobotApp(int argc, char *argv[])
     RfCC1101.RFAddr = 2;            // receive as robot 2
     res = RfCommsInit();        // check for available data
     printf("init status: %i\n",res);               // print status
-    while (1) {
+    while (1)
+    {
         //system ("espeak -ven+f2 -k5 -a50 -s150 \"Testing receiving wireless communication\" --stdout | aplay");
         RfCommsPacket package;                          // create package
         uint8 PollStatus;
         res = RfCommsReceivePoll( &PollStatus );        // check for available data
         printf("receive status: %i\n",res);               // print status
 
-        if ( PollStatus == 1 ) {                        // packet ready
+        if ( PollStatus == 1 )                          // packet ready
+        {
             res = RfCommsReceivePacket( &package );     // receive data
             printf("Packet received! (Rssi: %i, Lqi: %i) data: ",package.Rssi,package.Lqi);
-            for(i=0;i<package.DataLen;i++) {
+            for(i=0; i<package.DataLen; i++)
+            {
                 printf("%c",package.Data[i]);
             }
             printf("\n");
@@ -132,17 +124,26 @@ void RobotApp(int argc, char *argv[])
     }
 #endif
 #ifdef testDrive
+    printf("%d \n",AssessStubNode(4));
     DriveInit();
-    //DriveStraightDistance(200, 200);
+    Finish=10;
+    speed=80;
+    turnSpeed=60;
+    MapSize=12;
 
-    //turn left (yes, it doesn't quite fit the header description)
-    //DriveRotateRWheel(90, 80);
-    //turn right
-    //DriveRotateLWheel(90, 80);
-    //DriveRotateCenter(180, 50);
-    //DriveLineFollowDistance(2500,100);
-    DriveLineFollow(100);
-    while(1){};
+    DriveToDest(Finish);
+    //Scan QR code
+    res = QRCodeDecode(qr_data, maxContentLength);   // scan for QR code
+    printf("\nQR status: %i   data: %s\n",res,qr_data);                      // print status
+    DriveRotateCenter(-180, (turnSpeed));
+
+    DriveToDest(0);
+
+    system ("espeak -ven+f2 -k5 -a50 -s150 \"Good job big boys\" --stdout | aplay");
+    system("mpg123 rickroll.mp3");
+
+
+
 #endif
 #ifdef program
 
@@ -209,4 +210,83 @@ void RobotApp(int argc, char *argv[])
 
     printf ("Ready.\n");
 #endif
+}
+
+void TurnRobot(int RelativeDirection, int speed)
+{
+//Relative direction to next node (-1:no direction, 1=turn left, 2=forward, 3=turn right)
+    switch(RelativeDirection)
+
+    {
+    case 1:
+        DriveRotateLWheel(90, speed);
+        DriveStraightDistance(20,speed);
+        DriveLineFollow(speed);
+        _delay_ms(10);
+        break;
+    case 2:
+        DriveStraightDistance(40,speed);
+        DriveLineFollow(speed);
+        _delay_ms(10);
+        break;
+    case 3:
+        //turn right
+        DriveRotateRWheel(-90, speed);
+        DriveStraightDistance(20,speed);
+        DriveLineFollow(speed);
+        _delay_ms(10);
+        break;
+    default :
+        break;
+        //code
+    }
+}
+
+int AssessStubNode(int FirstScannedNode)
+{
+    switch(FirstScannedNode)
+    {
+    case 4:
+        return 0;
+        break;
+    case 3:
+        return 2;
+        break;
+    case 7:
+        return 6;
+        break;
+    case 11:
+        return 10;
+        break;
+    case 9:
+        return 8;
+        break;
+    default:
+        return -1;
+        break;
+    }
+    return -1;
+}
+
+void DriveToDest(int Destination)
+{
+    Destination;
+    DriveLineFollow(speed);
+
+    currentNode=TagReaderGetUID(tag_data);
+    Start=AssessStubNode(currentNode);
+    Dijkstra(Nodes,MapSize,Start,Destination);
+
+    printf("\nTHE START NODE: %d\n",Start);
+    printf("THE SECOND NODE: %d\n",currentNode);
+    NextRelDir=Nodes[currentNode].NextRelDir;
+    TurnRobot(NextRelDir,speed); //turn robot depending on the relative direction returned by dijkstra
+
+    while(Nodes[currentNode].Next!=Destination)
+    {
+        currentNode=Nodes[currentNode].Next;
+        printf("Node: %d , NOW TURNING TO: %d \n",currentNode,Nodes[currentNode].NextRelDir);
+        NextRelDir=Nodes[currentNode].NextRelDir;
+        TurnRobot(NextRelDir,speed);
+    }
 }
