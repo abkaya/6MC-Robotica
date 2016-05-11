@@ -32,7 +32,7 @@ void RobotApp(int argc, char *argv[])
     //==============================
     char qr_data[maxContentLength];    // create QR data holder
     int speed,res;
-    speed =70;
+    speed =60;
     char tag_data[maxContentLength];   // create tag data holder
     int i;                              // holds counter value
     //int readTagNode;                            // hold return status values
@@ -139,12 +139,16 @@ void RobotApp(int argc, char *argv[])
     }
 #endif
 #ifdef testDrive
+    printf("%d \n",AssessStubNode(4));
+
     int PathLength;
-    int r_CurrentNode;
+    int currentNode;
     int Start;
     //Create an array of nodes describing the map
     //NodeStruct* Nodes = malloc(MapSize * sizeof(NodeStruct));
     NodeStruct Nodes[MapSize];
+
+    //printing shortest path
     /*printf("\nShortest Path: \n");
     printf("-> %d ", Start);
 
@@ -153,14 +157,16 @@ void RobotApp(int argc, char *argv[])
         printf("\n");
 
         CurrentNode=Nodes[CurrentNode].Next;
-    }*/
-    /*
+    }
+
+
     int Current=Start;
     while(Nodes[Current].Next!=-1)
     {
         printf("-> %d ", Nodes[Current].Next);
         Current=Nodes[Current].Next;
     }*/
+
     DriveInit();
     //DriveStraightDistance(200, 200);
 
@@ -173,80 +179,31 @@ void RobotApp(int argc, char *argv[])
     int NextRelDir;
     Finish=10;
     DriveLineFollow(speed);
-    r_CurrentNode=-1;
 
-    do
-    {
-        r_CurrentNode=TagReaderGetUID(tag_data);
-        Start=r_CurrentNode;
-        DriveLineFollowDistance(12,-speed);
-    }
-    while(r_CurrentNode==-1);
-
-    printf("THE START NODE: %d\n",Start);
-    r_CurrentNode=Start;
-    PathLength=Dijkstra(Nodes,MapSize,Start,Finish)+1;
-    printf("PREVIOUS NODE: %d\n",Nodes[r_CurrentNode].Previous);
-    NextRelDir=Nodes[r_CurrentNode].NextRelDir;
+    currentNode=TagReaderGetUID(tag_data);
+    Start=AssessStubNode(currentNode);
+    PathLength=Dijkstra(Nodes,MapSize,Start,Finish);
+    printf("\nTHE START NODE: %d\n",Start);
+    printf("THE SECOND NODE: %d\n",currentNode);
+    NextRelDir=Nodes[currentNode].NextRelDir;
     TurnRobot(NextRelDir,speed); //turn robot depending on the relative direction returned by dijkstra
 
 
-    for(i=0; i<PathLength; i++)
-    {
-        do
-        {
-            r_CurrentNode=-1;
-            r_CurrentNode=TagReaderGetUID(tag_data);
-            DriveLineFollowDistance(12,-speed);
-        }
-        while(r_CurrentNode==-1);
-        printf("Node: %d , NOW TURNING TO: %d \n",r_CurrentNode,Nodes[r_CurrentNode].NextRelDir);
-        NextRelDir=Nodes[r_CurrentNode].NextRelDir;
-        TurnRobot(NextRelDir,speed);
 
+    while(currentNode!=Finish)
+    {
+            currentNode=Nodes[currentNode].Next;
+            printf("Node: %d , NOW TURNING TO: %d \n",currentNode,Nodes[currentNode].NextRelDir);
+            NextRelDir=Nodes[currentNode].NextRelDir;
+            TurnRobot(NextRelDir,speed);
     }
 
-    //system ("espeak -ven+f2 -k5 -a50 -s150 \"QR\" --stdout | aplay");
+    //Scan QR code
     res = QRCodeDecode(qr_data, maxContentLength);   // scan for QR code
     printf("QR status: %i   data: %s\n",res,qr_data);                      // print status
     DriveRotateCenter(180, speed);
 
-    Finish=8;
-    DriveLineFollow(speed);
-    r_CurrentNode=-1;
 
-    do
-    {
-        r_CurrentNode=TagReaderGetUID(tag_data);
-        Start=r_CurrentNode;
-        DriveLineFollowDistance(10,-speed);
-    }
-    while(r_CurrentNode==-1);
-
-    printf("THE START NODE: %d\n",Start);
-    r_CurrentNode=Start;
-    PathLength=Dijkstra(Nodes,MapSize,Start,Finish)+1;
-    printf("PREVIOUS NODE: %d\n",Nodes[r_CurrentNode].Previous);
-    NextRelDir=Nodes[r_CurrentNode].NextRelDir;
-    TurnRobot(NextRelDir,speed); //turn robot depending on the relative direction returned by dijkstra
-
-
-    for(i=0; i<PathLength; i++)
-    {
-        do
-        {
-            r_CurrentNode=TagReaderGetUID(tag_data);
-            DriveLineFollowDistance(8,-speed);
-        }
-        while(r_CurrentNode==-1);
-        printf("Node: %d , NOW TURNING TO: %d \n",r_CurrentNode,Nodes[r_CurrentNode].NextRelDir);
-        NextRelDir=Nodes[r_CurrentNode].NextRelDir;
-        TurnRobot(NextRelDir,speed);
-
-    }
-
-
-    system("mpg123 mjgdva.mp3");
 
 
 #endif
@@ -342,4 +299,30 @@ void TurnRobot(int RelativeDirection, int speed)
         break;
         //code
     }
+}
+
+int AssessStubNode(int FirstScannedNode)
+{
+    switch(FirstScannedNode)
+    {
+    case 4:
+        return 0;
+        break;
+    case 3:
+        return 2;
+        break;
+    case 7:
+        return 6;
+        break;
+    case 11:
+        return 10;
+        break;
+    case 9:
+        return 8;
+        break;
+    default:
+        return -1;
+        break;
+    }
+    return -1;
 }

@@ -49,4 +49,9 @@ void RobotApp(int argc, char *argv[]);
 */
 void TurnRobot(int RelativeDirection, int speed);
 
+/**
+* \brief Used to return the first node depending on the first scanned Tag
+* \param FirstScannedNode is the first scanned node, used to find the stub node.
+*/
+int AssessStubNode(int FirstScannedNode);
 #endif
