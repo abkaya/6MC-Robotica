@@ -26,6 +26,12 @@
 #define RS485_BAT_ADDR 3
 #define RS485_IMU_ADDR 5
 
+// ==============================
+// Settings
+// ==============================
+#define seekerRfAddress 7		// address of seeker ( this robot )
+#define pickerRfAddress 2		// address of picker
+
 #define MOTOR_RIGHT 1
 #define MOTOR_LEFT 2
 #define MOTOR_LIFT 3
@@ -71,11 +77,11 @@ void DriveToDest(int Destination);
 
 
 
-//==============================
-// Initialization
-//==============================
+
+
 //MapSize=12;
 char qr_data[maxContentLength];    // create QR data holder
+char qr_data_objective[maxContentLength];    // create QR data holder
 int res;
 int speed;
 int turnSpeed;

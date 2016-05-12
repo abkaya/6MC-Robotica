@@ -126,19 +126,58 @@ void RobotApp(int argc, char *argv[])
 #ifdef testDrive
     printf("%d \n",AssessStubNode(4));
     DriveInit();
-    Finish=10;
+    //Finish=10;
     speed=80;
     turnSpeed=60;
     MapSize=12;
 
-    DriveToDest(Finish);
-    //Scan QR code
-    res = QRCodeDecode(qr_data, maxContentLength);   // scan for QR code
-    printf("\nQR status: %i   data: %s\n",res,qr_data);                      // print status
-    DriveRotateCenter(-180, (turnSpeed));
+    bool ladingFound = false;
+    int endpointsSize = 5;
+    int endpoints[endpointsSize] = {0,2,6,8,10};
+    int pickerStart = -1;
 
-    DriveToDest(0);
+    qr_data_objective = "lading1";
 
+    while ( !ladingFound ) {
+        Finish = endpoints[endpointsSize-1];
+        DriveToDest(Finish);
+        if ( pickerStart == -1 )     // if first time drive
+            pickerStart = Start;     // save picker location
+        res = QRCodeDecode(qr_data, maxContentLength);   // scan for QR code
+        printf("\nQR status: %i   data: %s\n",res,qr_data);                      // print status
+        DriveRotateCenter(-180, (turnSpeed));
+        ladingFound = (qr_data == qr_data_objective);
+        if ( !ladingFound )
+            if ( endpointsSize > 0 )
+                endpointsSize--;
+        }
+    }
+
+    // ------------------------------
+    // Send instructions to picker
+    // ->   |        1         |        0        |
+    // ->   | 1B = finish node | 1B = start node |
+    // ------------------------------
+    RfCommsPacket package;					    // create package
+    package.DstRfAddr = pickerRfAddress;		// destination RF address
+    package.SrcRfAddr = seekerRfAddress;		// source RF address
+    package.DataLen = 2;						// number of data bytes in packet (Data array)
+    package.Data[0] = pickerStart;  			// start node
+    package.Data[1] = Finish;					// finish node
+    res = RfCommsSendPacket( &package );		// send data
+    printf("send status: %i\n",res);			// print status
+
+    // ------------------------------
+    // Park
+    // ------------------------------
+    int parking = 0;
+    while ( endpoints[parking] == Finish || parking == endpoints[pickerLocation] )
+        parking++;
+    DriveToDest(endpoints[parking]);
+
+    // ------------------------------
+    // Celebrate
+    // ------------------------------
     system ("espeak -ven+f2 -k5 -a50 -s150 \"Good job big boys\" --stdout | aplay");
     system("mpg123 rickroll.mp3");
 
