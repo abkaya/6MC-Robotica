@@ -131,14 +131,14 @@ void RobotApp(int argc, char *argv[])
     turnSpeed=60;
     MapSize=12;
 
-    bool ladingFound = false;
+    int ladingFound = 0;
     int endpointsSize = 5;
-    int endpoints[endpointsSize] = {0,2,6,8,10};
+    int endpoints[] = {0,2,6,8,10};
     int pickerStart = -1;
 
-    qr_data_objective = "lading1";
+    char* qr_data_objective = "lading1";
 
-    while ( !ladingFound ) {
+    while ( ladingFound == 0 ) {
         Finish = endpoints[endpointsSize-1];
         DriveToDest(Finish);
         if ( pickerStart == -1 )     // if first time drive
@@ -150,7 +150,6 @@ void RobotApp(int argc, char *argv[])
         if ( !ladingFound )
             if ( endpointsSize > 0 )
                 endpointsSize--;
-        }
     }
 
     // ------------------------------
@@ -164,16 +163,16 @@ void RobotApp(int argc, char *argv[])
     package.DataLen = 2;						// number of data bytes in packet (Data array)
     package.Data[0] = pickerStart;  			// start node
     package.Data[1] = Finish;					// finish node
-    res = RfCommsSendPacket( &package );		// send data
-    printf("send status: %i\n",res);			// print status
+    res = RfCommsSendPacket( &package );	// send data
+    printf("send status: %d\n",res);			// print status
 
     // ------------------------------
     // Park
     // ------------------------------
     int parking = 0;
-    while ( endpoints[parking] == Finish || parking == endpoints[pickerLocation] )
+    while ( endpoints[parking] == Finish || parking == endpoints[pickerStart] )
         parking++;
-    DriveToDest(endpoints[parking]);
+    DriveToDest( endpoints[parking] );
 
     // ------------------------------
     // Celebrate
@@ -309,7 +308,6 @@ int AssessStubNode(int FirstScannedNode)
 
 void DriveToDest(int Destination)
 {
-    Destination;
     DriveLineFollow(speed);
 
     currentNode=TagReaderGetUID(tag_data);

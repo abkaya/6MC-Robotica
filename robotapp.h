@@ -81,7 +81,6 @@ void DriveToDest(int Destination);
 
 //MapSize=12;
 char qr_data[maxContentLength];    // create QR data holder
-char qr_data_objective[maxContentLength];    // create QR data holder
 int res;
 int speed;
 int turnSpeed;
