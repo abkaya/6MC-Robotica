@@ -1,13 +1,13 @@
 //========================================
 //
 //  Dijkstra.c | C Implementation of the Dijkstra Algorithm
-//  Authors: Abdil Kaya & Robin Janssens
+//  Authors: Abdil Kaya
 //
 //========================================
 
 
 #include "dijkstra.h"
-#define debug
+//#define debug
 
 char Graph[]="Graph.dat";
 int LowestDV=999;

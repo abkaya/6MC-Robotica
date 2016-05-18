@@ -1,7 +1,7 @@
 //========================================
 //
 //  qrcode.c | C library to get data from QR code on Raspberry Pi
-//  Written by Abdil Kaya & Robin Janssens
+//  Written by Abdil Kaya
 //
 //========================================
 

@@ -124,30 +124,32 @@ void RobotApp(int argc, char *argv[])
     }
 #endif
 #ifdef testDrive
-    printf("%d \n",AssessStubNode(4));
     DriveInit();
     //Finish=10;
-    speed=80;
+    speed=75;
     turnSpeed=40;   // 60
     MapSize=12;
 
-    int ladingFound = 0;
+    bool loadFound = false;
     int endpointsSize = 5;
-    int endpoints[] = {0,2,6,8,10};
+    int endpoints[] = {0,10,8,6,2};
     int pickerStart = -1;
 
-    char* qr_data_objective = "lading1";
+    char* qr_data_objective = "lading2";
 
-    while ( ladingFound == 0 ) {
+    while ( loadFound == false ) {
+        //Making sure the Finish is not
         Finish = endpoints[endpointsSize-1];
-        DriveToDest(Finish);
+        DriveToDest(Finish); //Fills in the Start variable depending on the First node encountered. Using the AssessNode method
+                            //And drives to Finish of course
         if ( pickerStart == -1 )     // if first time drive
             pickerStart = Start;     // save picker location
         res = QRCodeDecode(qr_data, maxContentLength);   // scan for QR code
         printf("\nQR status: %i   data: %s\n",res,qr_data);                      // print status
-        DriveRotateCenter(180, (turnSpeed));
-        ladingFound = (qr_data == qr_data_objective);
-        if ( !ladingFound )
+
+        if(strstr(qr_data, qr_data_objective) != NULL) //checks whether or not qr_data_objective is found within qr_data and returns the pointer to the start of where it's found.
+                loadFound=true;
+        if ( loadFound==false )
             if ( endpointsSize > 0 )
                 endpointsSize--;
 
@@ -155,7 +157,9 @@ void RobotApp(int argc, char *argv[])
         printf(  "------------------\n");
         printf("qr_data: %s\n",qr_data);
         printf("qr_data_objective: %s\n",qr_data_objective);
-        printf("ladingFound: %i\n\n",ladingFound);
+        printf("Found load? : %s\n", loadFound ? "true" : "false");
+
+        DriveRotateCenter(180, (turnSpeed));
     }
 
     // ------------------------------
@@ -166,24 +170,30 @@ void RobotApp(int argc, char *argv[])
     RfCommsPacket package;					    // create package
     package.DstRfAddr = pickerRfAddress;		// destination RF address
     package.SrcRfAddr = seekerRfAddress;		// source RF address
-    package.DataLen = 2;						// number of data bytes in packet (Data array)
+    package.DataLen = 1;						// number of data bytes in packet (Data array)
     package.Data[0] = pickerStart;  			// start node
-    package.Data[1] = Finish;					// finish node
+    res = RfCommsSendPacket( &package );	    // send data
+    printf("send Start status: %d (0 is ok)\n",res);			// print status
+
+    package.DstRfAddr = pickerRfAddress;		// destination RF address
+    package.SrcRfAddr = seekerRfAddress;		// source RF address
+    package.DataLen = 1;						// number of data bytes in packet (Data array)
+    package.Data[0] = Finish;					// finish node
     res = RfCommsSendPacket( &package );	// send data
-    printf("send status: %d\n",res);			// print status
+    printf("send Finish status: %d (0 is ok)\n",res);			// print status
 
     // ------------------------------
     // Park
     // ------------------------------
     int parking = 0;
-    while ( endpoints[parking] == Finish || parking == endpoints[pickerStart] )
+    while ( endpoints[parking] == Finish || parking == endpoints[pickerStart] ) //Just making sure the node to park to isn't either the start of the finish.
         parking++;
-    DriveToDest( endpoints[parking] );
+    DriveToDest( endpoints[parking] );  //drive to a free stub node
 
     // ------------------------------
     // Celebrate
     // ------------------------------
-    system ("espeak -ven+f2 -k5 -a50 -s150 \"Good job big boys\" --stdout | aplay");
+    system ("espeak -ven+f2 -k5 -a50 -s150 \"Good job big boys, we fudging did it mate, let's celebrate with this piece of art.\" --stdout | aplay");
     system("mpg123 rickroll.mp3");
 
 
@@ -315,10 +325,18 @@ int AssessStubNode(int FirstScannedNode)
 void DriveToDest(int Destination)
 {
     DriveLineFollow(speed);
-
     currentNode=TagReaderGetUID(tag_data);
     Start=AssessStubNode(currentNode);
     Dijkstra(Nodes,MapSize,Start,Destination);
+
+    //Printing path
+    int Current=Start;
+    while(Nodes[Current].Next!=-1)
+    {
+        printf("-> %d ", Nodes[Current].Next);
+        Current=Nodes[Current].Next;
+    }
+    //
 
     printf("\nTHE START NODE: %d\n",Start);
     printf("THE SECOND NODE: %d\n",currentNode);

@@ -2,7 +2,7 @@
 #=======================================================
 #
 #  QRDecoder.sh |  
-#  Written by Abdil Kaya & Robin Janssens
+#  Written by Abdil Kaya
 #
 #=======================================================
 #lubuntu test version

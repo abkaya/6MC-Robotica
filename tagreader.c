@@ -1,14 +1,14 @@
 //========================================
 //
 //  tagreader.c | C library to get data from tagreader on Raspberry Pi
-//  Written by Abdil Kaya & Robin Janssens
+//  Written by Robin Janssens
 //
 //========================================
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-#define DEBUG_ABORT
+//#define DEBUG_ABORT
 
 int TagReaderGetUID(char *Data) {
 

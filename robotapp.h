@@ -30,7 +30,7 @@
 // Settings
 // ==============================
 #define seekerRfAddress 7		// address of seeker ( this robot )
-#define pickerRfAddress 2		// address of picker
+#define pickerRfAddress 9		// address of picker
 
 #define MOTOR_RIGHT 1
 #define MOTOR_LEFT 2
@@ -44,6 +44,7 @@
 #include "tagreader.h"
 #include "rfcomms.h"
 #include "drive.h"
+#include <stdbool.h>
 
 
 extern RS485ClientStruct RS485Client;
@@ -74,9 +75,6 @@ int AssessStubNode(int FirstScannedNode);
 * \param Finish: Destination node or stub
 */
 void DriveToDest(int Destination);
-
-
-
 
 
 //MapSize=12;

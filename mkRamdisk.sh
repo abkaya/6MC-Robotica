@@ -3,7 +3,7 @@
 #=======================================================
 #
 #  QRDecoder.sh |  
-#  Written by Abdil Kaya & Robin Janssens
+#  Written by Abdil Kaya
 #
 #=======================================================
 GREEN='\033[0;32m'

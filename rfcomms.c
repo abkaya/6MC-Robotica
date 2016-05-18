@@ -1,7 +1,7 @@
 //========================================
 //
 //  rfcomms.c
-//  Written by Abdil Kaya & Robin Janssens
+//  Written by Robin Janssens
 //
 //========================================
 
