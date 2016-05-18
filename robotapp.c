@@ -128,7 +128,7 @@ void RobotApp(int argc, char *argv[])
     DriveInit();
     //Finish=10;
     speed=80;
-    turnSpeed=60;
+    turnSpeed=40;   // 60
     MapSize=12;
 
     int ladingFound = 0;
@@ -145,11 +145,17 @@ void RobotApp(int argc, char *argv[])
             pickerStart = Start;     // save picker location
         res = QRCodeDecode(qr_data, maxContentLength);   // scan for QR code
         printf("\nQR status: %i   data: %s\n",res,qr_data);                      // print status
-        DriveRotateCenter(-180, (turnSpeed));
+        DriveRotateCenter(180, (turnSpeed));
         ladingFound = (qr_data == qr_data_objective);
         if ( !ladingFound )
             if ( endpointsSize > 0 )
                 endpointsSize--;
+
+        printf("\nQR Scanning result\n");
+        printf(  "------------------\n");
+        printf("qr_data: %s\n",qr_data);
+        printf("qr_data_objective: %s\n",qr_data_objective);
+        printf("ladingFound: %i\n\n",ladingFound);
     }
 
     // ------------------------------
