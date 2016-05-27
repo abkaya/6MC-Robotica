@@ -1,7 +1,9 @@
 #!/bin/bash
 #=======================================================
 #
-#  QRDecoder.sh |  
+# QRDecoder.sh | Takes a picture and attempts to decode QR data. If available, its contents are written to QR.dat on the ramdisk. 
+#		 Integrity check done by writing the time of system call to script to QR.dat
+#		 QR.dat also consists of an error code passing one of the various possible states
 #  Written by Abdil Kaya
 #
 #=======================================================

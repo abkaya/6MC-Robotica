@@ -2,7 +2,8 @@
 
 #=======================================================
 #
-#  mkRamDisk.sh | Creates a ramdisk /mnt/ramdisk to write QR and other data to -- only if it doesn't already exist   
+#  mkRamDisk.sh | Script called in robotapp.c as the first thing. Ensures the existence of a ramdisk at /mnt/ramdisk, and if necessary creates it. 
+#                 It is created to limit reads/writes from/to the micro sd card on board of the raspberry pi.   
 #  Written by Abdil Kaya
 #  
 #=======================================================
