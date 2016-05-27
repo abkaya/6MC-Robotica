@@ -81,17 +81,23 @@ void RobotApp(int argc, char *argv[])
     {
         //system ("espeak -ven+f2 -k5 -a50 -s150 \"Testing sending wireless communication\" --stdout | aplay");
 
-        RfCommsPacket package;      // create package
-        package.DstRfAddr = 2;      // destination RF address
-        package.SrcRfAddr = 7;      // source RF address
-        package.DataLen = 4;        // number of data bytes in packet (Data array)
-        package.Data[0] = 1;        // set data (1337)
-        package.Data[1] = 3;        // set data (1337)
-        package.Data[2] = 3;        // set data (1337)
-        package.Data[3] = 7;        // set data (1337)
 
-        res = RfCommsSendPacket( &package );   // Send data
-        printf("send status: %i\n",res);                      // print status
+
+        RfCommsPacket package;					    // create package
+        package.DstRfAddr = pickerRfAddress;		// destination RF address
+        package.SrcRfAddr = seekerRfAddress;		// source RF address
+        package.DataLen = 1;						// number of data bytes in packet (Data array)
+        package.Data[0] = 0;  			// start node
+        res = RfCommsSendPacket( &package );	    // send data
+        printf("send Start status: %d (0 is ok)\n",res);			// print status
+
+        package.DstRfAddr = pickerRfAddress;		// destination RF address
+        package.SrcRfAddr = seekerRfAddress;		// source RF address
+        package.DataLen = 1;						// number of data bytes in packet (Data array)
+        package.Data[0] = 2;					// finish node
+        res = RfCommsSendPacket( &package );	// send data
+        printf("send Finish status: %d (0 is ok)\n",res);			// print status
+
         _delay_ms(5000);
     }
 #endif
@@ -137,18 +143,19 @@ void RobotApp(int argc, char *argv[])
 
     char* qr_data_objective = "lading2";
 
-    while ( loadFound == false ) {
+    while ( loadFound == false )
+    {
         //Making sure the Finish is not
         Finish = endpoints[endpointsSize-1];
         DriveToDest(Finish); //Fills in the Start variable depending on the First node encountered. Using the AssessNode method
-                            //And drives to Finish of course
+        //And drives to Finish of course
         if ( pickerStart == -1 )     // if first time drive
             pickerStart = Start;     // save picker location
         res = QRCodeDecode(qr_data, maxContentLength);   // scan for QR code
         printf("\nQR status: %i   data: %s\n",res,qr_data);                      // print status
 
         if(strstr(qr_data, qr_data_objective) != NULL) //checks whether or not qr_data_objective is found within qr_data and returns the pointer to the start of where it's found.
-                loadFound=true;
+            loadFound=true;
         if ( loadFound==false )
             if ( endpointsSize > 0 )
                 endpointsSize--;
@@ -163,6 +170,18 @@ void RobotApp(int argc, char *argv[])
     }
 
     // ------------------------------
+    // Park
+    // ------------------------------
+    int parking = 0;
+    while ( endpoints[parking] == Finish || pickerStart == endpoints[parking] ) //Just making sure the node to park to isn't either the start of the finish.
+        parking++;
+    DriveToDest( endpoints[parking] );  //drive to a free stub node
+
+    // ------------------------------
+    // Celebrate
+    // ------------------------------
+
+        // ------------------------------
     // Send instructions to picker
     // ->   |        1         |        0        |
     // ->   | 1B = finish node | 1B = start node |
@@ -182,17 +201,6 @@ void RobotApp(int argc, char *argv[])
     res = RfCommsSendPacket( &package );	// send data
     printf("send Finish status: %d (0 is ok)\n",res);			// print status
 
-    // ------------------------------
-    // Park
-    // ------------------------------
-    int parking = 0;
-    while ( endpoints[parking] == Finish || parking == endpoints[pickerStart] ) //Just making sure the node to park to isn't either the start of the finish.
-        parking++;
-    DriveToDest( endpoints[parking] );  //drive to a free stub node
-
-    // ------------------------------
-    // Celebrate
-    // ------------------------------
     system ("espeak -ven+f2 -k5 -a50 -s150 \"Good job big boys, we fudging did it mate, let's celebrate with this piece of art.\" --stdout | aplay");
     system("mpg123 rickroll.mp3");
 

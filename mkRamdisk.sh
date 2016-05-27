@@ -2,9 +2,9 @@
 
 #=======================================================
 #
-#  QRDecoder.sh |  
+#  mkRamDisk.sh | Creates a ramdisk /mnt/ramdisk to write QR and other data to -- only if it doesn't already exist   
 #  Written by Abdil Kaya
-#
+#  
 #=======================================================
 GREEN='\033[0;32m'
 NC='\033[0m'

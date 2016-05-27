@@ -1,7 +1,14 @@
 //========================================
 //
-//  qrcode.c | C library to get data from QR code on Raspberry Pi
-//  Written by Abdil Kaya
+//  qrcode.c | Reading QR data and error codes from
+//  the ramdisk-written QR.dat file
+//
+//  Written by:
+//    Abdil Kaya
+//      - mkRamDisk.sh
+//      - QRDecoder.sh
+//    Robin Janssens:
+//      - qrcode.c
 //
 //========================================
 
@@ -53,7 +60,7 @@ int QRCodeDecode(char* Data,int MaxDataLen)
         fclose(fp);  // close QR.dat
 
         //==============================
-        // Check if data is valid
+        // Compare our time with the time written in QR.dat. -- Integrity check
         //==============================
         time_dif = time_file_int - time_int;   // calculate the difference
 #ifdef DEBUG_ABORT

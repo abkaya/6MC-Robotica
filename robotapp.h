@@ -30,7 +30,7 @@
 // Settings
 // ==============================
 #define seekerRfAddress 7		// address of seeker ( this robot )
-#define pickerRfAddress 9		// address of picker
+#define pickerRfAddress 4		// address of picker
 
 #define MOTOR_RIGHT 1
 #define MOTOR_LEFT 2
